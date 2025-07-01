@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    color-scheme: light dark;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html, body {
+    @apply m-0 p-0 min-h-screen w-full;
+    @apply bg-gray-900;
+  }
+
+  #root {
+    @apply h-full w-full;
+  }
+}
+
+/* Drag and drop styles */
+.dragging {
+  opacity: 0.5;
+  transform: scale(0.95);
+}
+
+[draggable="true"] {
+  cursor: grab;
+}
+
+[draggable="true"]:active {
+  cursor: grabbing;
+}
+
+.canvas-container {
+  @apply fixed inset-0;
+  @apply bg-transparent;
+}

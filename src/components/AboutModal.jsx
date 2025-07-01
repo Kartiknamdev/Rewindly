@@ -90,7 +90,7 @@ export function AboutModal({ isOpen, onClose, accentColor }) {
                   >
                     <div>
                       <h3 className="text-2xl font-semibold text-white mb-2">Kartik Namdev</h3>
-                      <p className="text-white/70 text-lg">I love making beatiful apps</p>
+                      <p className="text-white/70 text-lg">I love making beautiful apps</p>
                     </div>
 
                     {/* Social Links with improved hover effects */}

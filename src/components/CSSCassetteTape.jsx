@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export function CSSCassetteTape({ 
   label = 'Untitled', 
@@ -12,6 +12,8 @@ export function CSSCassetteTape({
   playerColor = '#6366f1',
   accentColor = '#ffffff'
 }) {
+  const [animatingHeart, setAnimatingHeart] = useState(false);
+
   // Bouncy spring animation for the reels
   const reelSpringConfig = {
     type: "spring",
@@ -55,7 +57,9 @@ export function CSSCassetteTape({
 
   const handleSaveClick = (e) => {
     e.stopPropagation();
+    setAnimatingHeart(true);
     onSaveToggle?.();
+    setTimeout(() => setAnimatingHeart(false), 750);
   };
 
   return (
@@ -77,24 +81,73 @@ export function CSSCassetteTape({
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
-      {/* Save button */}
-      <motion.button
-        className="absolute -right-2 -top-2 p-2 bg-gray-800/90 rounded-full shadow-lg z-10 opacity-0 group-hover:opacity-100 transition-opacity"
-        onClick={handleSaveClick}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        initial={false}
-      >
-        {isSaved ? (
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-          </svg>
-        ) : (
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-300 hover:text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-          </svg>
-        )}
-      </motion.button>
+      {/* Save button with enhanced animation */}
+      <div className="absolute -right-2 -top-2 z-10">
+        <motion.button
+          className="relative p-2 bg-gray-800/90 backdrop-blur-sm rounded-full shadow-lg"
+          onClick={handleSaveClick}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          animate={animatingHeart ? {
+            scale: [1, 1.2, 1],
+            rotate: [0, -10, 10, 0],
+          } : {}}
+          transition={{
+            duration: 0.4,
+            ease: "easeInOut"
+          }}
+        >
+          <AnimatePresence mode="wait">
+            {isSaved ? (
+              <motion.div
+                key="filled"
+                initial={{ scale: 0.5, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.5, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                </svg>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="outline"
+                initial={{ scale: 0.5, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.5, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-300 hover:text-red-500 transition-colors duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Particle burst effect */}
+          <AnimatePresence>
+            {animatingHeart && (
+              <>
+                {[...Array(6)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute w-1 h-1 rounded-full bg-red-500"
+                    initial={{ scale: 0, x: 0, y: 0 }}
+                    animate={{
+                      scale: [1, 0],
+                      x: [0, Math.cos(i * 60 * (Math.PI / 180)) * 20],
+                      y: [0, Math.sin(i * 60 * (Math.PI / 180)) * 20],
+                    }}
+                    exit={{ scale: 0, opacity: 0 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                  />
+                ))}
+              </>
+            )}
+          </AnimatePresence>
+        </motion.button>
+      </div>
 
       <div className="absolute inset-2 bg-gray-900/30 backdrop-blur-sm rounded-md overflow-hidden">
         {/* Decorative tape lines */}

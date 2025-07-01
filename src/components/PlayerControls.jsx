@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export function PlayerControls({ 
   currentTrack, 
@@ -75,136 +75,114 @@ export function PlayerControls({
     <motion.div
       initial={{ y: 100 }}
       animate={{ y: 0 }}
-      className="fixed bottom-0 left-0 right-0 bg-gray-900/90 backdrop-blur-md border-t border-gray-800 p-4 z-50"
+      className="fixed bottom-0 left-0 right-0 bg-gray-900/90 backdrop-blur-md border-t border-gray-800 
+                pb-safe z-50" // Added pb-safe for iOS safe area
       style={{
         background: `linear-gradient(to top, ${playerColor}, ${playerColor}00)`,
       }}
     >
-      <div className="max-w-7xl mx-auto flex items-center gap-4">
-        {/* Track Info */}
-        <div className="flex-shrink-0 w-48">
-          {currentTrack && (
-            <div>
-              <div className="text-white font-medium truncate">{currentTrack.title}</div>
-              <div className="text-gray-400 text-sm truncate">{currentTrack.artist}</div>
-            </div>
-          )}
-        </div>
+      {/* Seek bar */}
+      <div className="w-full h-1 bg-gray-700/50">
+        <motion.div 
+          className="h-full"
+          style={{ 
+            background: accentColor,
+            width: `${(currentTime / duration) * 100}%`
+          }}
+        />
+      </div>
 
-        {/* Visualizer */}
-        <div 
-          ref={visualizerRef}
-          className="flex items-end gap-[2px] h-12 w-32"
-          style={{ opacity: currentTrack ? 1 : 0.3 }}
-        >
-          {[...Array(16)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="w-1.5 bg-white/30 rounded-t"
-              style={{ height: '20%' }}
-              animate={{ height: ['20%', '60%', '20%'] }}
-              transition={{
-                duration: 0.8,
-                repeat: Infinity,
-                repeatType: 'reverse',
-                delay: i * 0.1,
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Time and Seek */}
-        <div className="flex-1 flex items-center gap-3 text-sm text-gray-400">
-          <span>{formatTime(currentTime)}</span>
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={(currentTime / duration) * 100 || 0}
-            onChange={handleSeek}
-            className="flex-1 accent-white"
-            style={{ accentColor }}
-          />
-          <span>{formatTime(duration)}</span>
-        </div>
-
-        {/* Volume */}
-        <div className="relative">
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            className="p-2 text-white hover:bg-white/10 rounded-full"
-            onClick={showVolumeSlider}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15.536a5 5 0 001.414 1.414m2.828-9.9a9 9 0 012.828-2.828" />
-            </svg>
-          </motion.button>
-
-          {isVolumeVisible && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              className="absolute bottom-full right-0 mb-2 bg-gray-900/90 backdrop-blur-sm rounded-lg p-3 w-32"
-            >
-              <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.01"
-                value={volume}
-                onChange={(e) => {
-                  onVolumeChange(parseFloat(e.target.value));
-                  showVolumeSlider();
-                }}
-                className="w-full accent-white"
-                style={{ accentColor }}
-              />
-            </motion.div>
-          )}
-        </div>
-
-        {/* Playback Controls */}
-        <div className="flex items-center gap-2">
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            className="p-2 text-white hover:bg-white/10 rounded-full"
-            onClick={onPrevious}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M8.445 14.832A1 1 0 0010 14v-2.798l5.445 3.63A1 1 0 0017 14V6a1 1 0 00-1.555-.832L10 8.798V6a1 1 0 00-1.555-.832l-6 4a1 1 0 000 1.664l6 4z" />
-            </svg>
-          </motion.button>
-
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            className="p-3 text-white hover:bg-white/10 rounded-full"
-            onClick={onPlayPause}
-          >
-            {isPlaying ? (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6" />
-              </svg>
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-              </svg>
+      <div className="max-w-7xl mx-auto p-2 sm:p-4">
+        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+          {/* Track Info - Full width on mobile */}
+          <div className="w-full sm:w-48 text-center sm:text-left mb-2 sm:mb-0">
+            {currentTrack && (
+              <div>
+                <div className="text-white font-medium truncate">{currentTrack.title}</div>
+                <div className="text-gray-400 text-sm truncate">{currentTrack.artist}</div>
+              </div>
             )}
-          </motion.button>
+          </div>
 
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            className="p-2 text-white hover:bg-white/10 rounded-full"
-            onClick={onNext}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M4.555 5.168A1 1 0 003 6v8a1 1 0 001.555.832L10 11.202V14a1 1 0 001.555.832l6-4a1 1 0 000-1.664l-6-4A1 1 0 0010 6v2.798L4.555 5.168z" />
-            </svg>
-          </motion.button>
+          {/* Main Controls - Centered on mobile */}
+          <div className="flex items-center justify-center gap-4 sm:gap-6 flex-1">
+            <button
+              className="text-white/80 hover:text-white p-2"
+              onClick={onPrevious}
+              disabled={!currentTrack}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+              </svg>
+            </button>
+
+            <button
+              className="text-white p-3 rounded-full bg-white/10 hover:bg-white/20"
+              onClick={onPlayPause}
+              disabled={!currentTrack}
+            >
+              {isPlaying ? (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              )}
+            </button>
+
+            <button
+              className="text-white/80 hover:text-white p-2"
+              onClick={onNext}
+              disabled={!currentTrack}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Volume and Time - Hidden on mobile */}
+          <div className="hidden sm:flex items-center gap-4 w-48">
+            <div className="text-white/60 text-sm">
+              {formatTime(currentTime)} / {formatTime(duration)}
+            </div>
+
+            <div className="relative">
+              <button
+                className="text-white/80 hover:text-white p-2"
+                onClick={showVolumeSlider}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                </svg>
+              </button>
+
+              <AnimatePresence>
+                {isVolumeVisible && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 p-2 bg-gray-800 rounded-lg shadow-lg"
+                  >
+                    <input
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.01"
+                      value={volume}
+                      onChange={(e) => onVolumeChange(parseFloat(e.target.value))}
+                      className="w-24 accent-current"
+                      style={{ color: accentColor }}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
         </div>
       </div>
     </motion.div>

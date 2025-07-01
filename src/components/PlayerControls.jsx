@@ -71,6 +71,22 @@ export function PlayerControls({
     volumeTimeout.current = setTimeout(() => setIsVolumeVisible(false), 2000);
   };
 
+  const NowPlaying = ({ track }) => (
+    <div className="flex-1 min-w-0">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-white"
+      >
+        <div className="flex items-center gap-2">
+          <h3 className="font-medium truncate">{track.title}</h3>
+          <span className="px-1.5 py-0.5 text-xs bg-white/10 rounded-full">Preview</span>
+        </div>
+        <p className="text-sm text-white/70 truncate">{track.artist}</p>
+      </motion.div>
+    </div>
+  );
+
   return (
     <motion.div
       initial={{ y: 100 }}
@@ -81,16 +97,156 @@ export function PlayerControls({
         background: `linear-gradient(to top, ${playerColor}, ${playerColor}00)`,
       }}
     >
-      {/* Seek bar */}
-      <div className="w-full h-1 bg-gray-700/50">
+      {/* Wave Visualization */}
+      <div className="w-full h-6 overflow-hidden">
         <motion.div 
-          className="h-full"
+          className="flex justify-between items-center h-full px-2"
+          style={{
+            opacity: isPlaying ? 0.8 : 0.4
+          }}
+        >
+          {[...Array(50)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="w-0.5 rounded-full"
+              style={{
+                background: accentColor,
+                originY: "center"
+              }}
+              animate={{
+                scaleY: isPlaying 
+                  ? [
+                      0.2 + Math.random() * 0.8,
+                      0.1 + Math.random() * 0.5,
+                      0.3 + Math.random() * 0.7
+                    ]
+                  : 0.15,
+                opacity: isPlaying 
+                  ? [0.7, 0.9, 0.7]
+                  : 0.5
+              }}
+              transition={{
+                duration: 1 + Math.random() * 0.5,
+                repeat: Infinity,
+                repeatType: "reverse",
+                ease: "easeInOut",
+                delay: i * 0.02
+              }}
+            />
+          ))}
+        </motion.div>
+      </div>
+
+      {/* Enhanced Seek bar with animations */}
+      <div className="w-full h-1.5 bg-gray-700/30 relative overflow-hidden">
+        {/* Waveform reflection effect */}
+        <motion.div 
+          className="absolute inset-0"
+          style={{
+            background: `linear-gradient(to bottom, ${accentColor}05, transparent)`,
+            opacity: isPlaying ? 0.6 : 0.3
+          }}
+          animate={{
+            opacity: isPlaying ? [0.4, 0.6, 0.4] : 0.3
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            repeatType: "reverse",
+            ease: "easeInOut"
+          }}
+        />
+
+        {/* Background pulse effect */}
+        <motion.div 
+          className="absolute inset-0 origin-left"
+          style={{ 
+            background: `${accentColor}20`,
+          }}
+          animate={{
+            scaleX: [1, 1.2, 1],
+            opacity: [0.5, 0.8, 0.5],
+          }}
+          transition={{
+            duration: 2,
+            ease: "easeInOut",
+            repeat: Infinity,
+            repeatType: "reverse"
+          }}
+        />
+        
+        {/* Main progress bar */}
+        <motion.div 
+          className="h-full relative"
           style={{ 
             background: accentColor,
-            width: `${(currentTime / duration) * 100}%`
+            width: `${(currentTime / duration) * 100}%`,
+          }}
+          animate={{
+            boxShadow: isPlaying 
+              ? `0 0 10px ${accentColor}80, 0 0 5px ${accentColor}`
+              : "none"
+          }}
+          transition={{
+            duration: 0.8,
+            ease: "easeInOut"
+          }}
+        >
+          {/* Progress glow effect */}
+          <motion.div
+            className="absolute right-0 top-0 bottom-0 w-20"
+            style={{
+              background: `linear-gradient(to right, ${accentColor}00, ${accentColor}40)`,
+            }}
+            animate={{
+              opacity: isPlaying ? [0.4, 0.7, 0.4] : 0
+            }}
+            transition={{
+              duration: 1.5,
+              ease: "easeInOut",
+              repeat: Infinity,
+              repeatType: "reverse"
+            }}
+          />
+        </motion.div>
+
+        {/* Playhead dot with enhanced glow */}
+        <motion.div
+          className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full"
+          style={{
+            background: accentColor,
+            left: `${(currentTime / duration) * 100}%`,
+            transform: 'translate(-50%, -50%)',
+            filter: isPlaying ? 'blur(0.5px)' : 'none'
+          }}
+          animate={{
+            scale: isPlaying ? [1, 1.2, 1] : 1,
+            boxShadow: isPlaying 
+              ? [
+                  `0 0 0 2px ${accentColor}20, 0 0 10px ${accentColor}60`,
+                  `0 0 0 3px ${accentColor}40, 0 0 15px ${accentColor}80`,
+                  `0 0 0 2px ${accentColor}20, 0 0 10px ${accentColor}60`
+                ]
+              : `0 0 0 2px ${accentColor}20`
+          }}
+          transition={{
+            duration: 1.5,
+            ease: "easeInOut",
+            repeat: Infinity,
+            repeatType: "reverse"
           }}
         />
       </div>
+
+      {/* Progress Overlay for clicks - Invisible but clickable */}
+      <div 
+        className="absolute inset-x-0 top-0 h-12 cursor-pointer"
+        onClick={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          const percentage = (e.clientX - rect.left) / rect.width;
+          handleSeek({ target: { value: percentage * 100 } });
+        }}
+      />
 
       <div className="max-w-7xl mx-auto p-2 sm:p-4">
         <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">

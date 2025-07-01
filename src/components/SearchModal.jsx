@@ -1,37 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { searchTracks, getTrendingTracks } from '../services/shazamApi';
+import { searchTracks } from '../services/shazamApi';
 
 export function SearchModal({ onClose, onTrackSelect, playerColor, accentColor }) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
-  const [trendingTracks, setTrendingTracks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isTrendingLoading, setIsTrendingLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // Fetch trending tracks on mount
-  useEffect(() => {
-    const loadTrendingTracks = async () => {
-      setIsTrendingLoading(true);
-      setError(null);
-      try {
-        const tracks = await getTrendingTracks();
-        if (tracks && tracks.length > 0) {
-          setTrendingTracks(tracks);
-        } else {
-          throw new Error('No trending tracks available');
-        }
-      } catch (err) {
-        console.error('Failed to load trending tracks:', err);
-        setError('Unable to load trending tracks. Please try searching instead.');
-      } finally {
-        setIsTrendingLoading(false);
-      }
-    };
-
-    loadTrendingTracks();
-  }, []);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -65,7 +40,7 @@ export function SearchModal({ onClose, onTrackSelect, playerColor, accentColor }
 
   const TrackItem = ({ track }) => (
     <motion.div
-      className="group cursor-pointer"
+      className="group cursor-pointer relative"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
@@ -176,39 +151,31 @@ export function SearchModal({ onClose, onTrackSelect, playerColor, accentColor }
 
           <div className="space-y-6">
             <AnimatePresence mode="wait">
-              {results.length > 0 ? (
-                <motion.div
-                  key="results"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                >
-                  <h3 className="text-white/90 font-medium mb-3">Search Results</h3>
-                  <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
-                    {results.map((track) => (
-                      <TrackItem key={track.id} track={track} />
-                    ))}
-                  </div>
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="trending"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                >
-                  <h3 className="text-white/90 font-medium mb-3">Trending Now</h3>
-                  {isTrendingLoading ? (
-                    <LoadingSpinner />
-                  ) : (
+              <motion.div
+                key="results"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                {results.length > 0 ? (
+                  <>
+                    <h3 className="text-white/90 font-medium mb-3">Search Results</h3>
                     <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
-                      {trendingTracks.map((track) => (
+                      {results.map((track) => (
                         <TrackItem key={track.id} track={track} />
                       ))}
                     </div>
-                  )}
-                </motion.div>
-              )}
+                  </>
+                ) : query ? (
+                  <div className="text-white/70 text-center py-8">
+                    No results found. Try a different search term.
+                  </div>
+                ) : (
+                  <div className="text-white/70 text-center py-8">
+                    Type something to search for music
+                  </div>
+                )}
+              </motion.div>
             </AnimatePresence>
           </div>
         </div>

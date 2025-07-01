@@ -9,11 +9,13 @@ import { AudioPlayer } from './components/AudioPlayer';
 import { SearchModal } from './components/SearchModal';
 import { PlaylistManager } from './components/PlaylistManager';
 import { CassetteShelf } from './components/CassetteShelfNew';
-import { ThemeSelector } from './components/ThemeSelector';
+import { ThemeSelector } from './components/themes/NewThemeSelector';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { PlayerControls } from './components/PlayerControls';
 import { ToastContainer } from './components/Toast';
 import { useToast } from './hooks/useToast';
+import { ColorPicker } from './components/ColorPicker';
+import { AboutModal } from './components/AboutModal';
 
 function ErrorBoundary({ children }) {
   const [hasError, setHasError] = useState(false)
@@ -63,6 +65,7 @@ function App() {
   const [selectedCassette, setSelectedCassette] = useState(null)
   const [isPlaylistOpen, setIsPlaylistOpen] = useState(false)
   const [isShelfOpen, setIsShelfOpen] = useState(window.innerWidth >= 1024); // Open by default on desktop
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
   const audioRef = useRef(null);
   const { toasts, addToast, removeToast } = useToast();
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -87,6 +90,10 @@ function App() {
       }
       return [...prev, track];
     });
+    // Set the selected track as current and start playing
+    setSelectedCassette(track);
+    setCurrentTrack(track);
+    setIsPlaying(true);
     setIsSearchOpen(false);
   };
 
@@ -303,139 +310,141 @@ function App() {
           <Suspense fallback={<div className="text-white">Loading...</div>}>
             {/* Top Navigation Bar */}
             <div className="fixed top-0 left-0 right-0 p-4 flex items-center justify-between z-50">
-              {/* Left Side - Playlist */}
-              <motion.div className="relative">
+              {/* Left Side - Controls */}
+              <div className="flex items-center gap-2">
+                {/* Playlist Button */}
+                <motion.div className="relative">
+                  <motion.button
+                    className="bg-gray-800/80 backdrop-blur-sm p-2.5 rounded-full 
+                             text-white hover:bg-gray-700/80 relative"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setIsPlaylistOpen(!isPlaylistOpen)}
+                    onMouseEnter={() => setHoveredButton('playlist')}
+                    onMouseLeave={() => setHoveredButton(null)}
+                  >
+                    <motion.div
+                      animate={isPlaylistOpen ? { rotate: 360 } : { rotate: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                      </svg>
+                    </motion.div>
+                  </motion.button>
+                  <AnimatePresence>
+                    {hoveredButton === 'playlist' && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 
+                                 bg-gray-800/90 text-white text-xs py-1 px-2 rounded whitespace-nowrap"
+                      >
+                        {buttonTooltip.playlist}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+
+                {/* Search Button */}
                 <motion.button
                   className="bg-gray-800/80 backdrop-blur-sm p-2.5 rounded-full 
                            text-white hover:bg-gray-700/80 relative"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setIsPlaylistOpen(!isPlaylistOpen)}
-                  onMouseEnter={() => setHoveredButton('playlist')}
+                  onClick={() => setIsSearchOpen(true)}
+                  onMouseEnter={() => setHoveredButton('search')}
                   onMouseLeave={() => setHoveredButton(null)}
                 >
-                  <motion.div
-                    animate={isPlaylistOpen ? { rotate: 360 } : { rotate: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
-                    </svg>
-                  </motion.div>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </motion.button>
+              </div>
+
+              {/* Center - Title */}
+              <motion.h1
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                className="text-2xl font-bold text-white tracking-wider"
+                style={{
+                  textShadow: '0 0 10px rgba(255,255,255,0.5)',
+                  fontFamily: "'Arial', sans-serif"
+                }}
+                onClick={() => setIsAboutOpen(true)}
+              >
+                REWINDLY
+              </motion.h1>
+
+              {/* Right Side - Theme and Cassettes */}
+              <div className="flex items-center gap-2">
+                {/* Cassettes Button */}
+                <motion.button
+                  className="bg-gray-800/80 backdrop-blur-sm p-2.5 rounded-full 
+                           text-white hover:bg-gray-700/80 relative"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setIsShelfOpen(!isShelfOpen)}
+                  onMouseEnter={() => setHoveredButton('cassettes')}
+                  onMouseLeave={() => setHoveredButton(null)}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                  </svg>
                 </motion.button>
                 <AnimatePresence>
-                  {hoveredButton === 'playlist' && (
+                  {hoveredButton === 'cassettes' && (
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 10 }}
-                      className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 
-                               bg-gray-800/90 text-white text-xs py-1 px-2 rounded whitespace-nowrap"
+                      className="absolute mt-2 bg-gray-800/90 text-white text-xs py-1 px-2 rounded whitespace-nowrap"
+                      style={{
+                        top: '100%',
+                        right: '0'
+                      }}
                     >
-                      {buttonTooltip.playlist}
+                      {buttonTooltip.cassettes}
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </motion.div>
 
-              {/* Center - Theme Switcher */}
-              <motion.div 
-                className="bg-gray-800/80 backdrop-blur-sm rounded-full px-3 py-1.5 flex items-center gap-2
-                         border border-white/10 shadow-lg"
-                initial={{ y: -20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.2 }}
-                onClick={handleThemeClick}
-                whileHover={{ scale: 1.05, backgroundColor: 'rgba(31, 41, 55, 0.9)' }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <motion.span 
-                  className="text-white/80 text-sm capitalize"
-                  animate={{ opacity: [0.6, 1] }}
-                  transition={{ duration: 1, repeat: Infinity, repeatType: "reverse" }}
+                {/* Theme Selector */}
+                <motion.button
+                  className="bg-gray-800/80 backdrop-blur-sm p-2.5 rounded-full 
+                           text-white hover:bg-gray-700/80 relative"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleThemeClick}
+                  onMouseEnter={() => setHoveredButton('theme')}
+                  onMouseLeave={() => setHoveredButton(null)}
                 >
-                  {themeLabels[playerTheme]}
-                </motion.span>
-                <motion.div 
-                  className="w-5 h-5 flex items-center justify-center text-white/80"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                  </svg>
-                </motion.div>
-              </motion.div>
-
-              {/* Right Side - Search and Cassettes */}
-              <div className="flex items-center gap-3">
-                <motion.div className="relative">
-                  <motion.button
-                    className="bg-gray-800/80 backdrop-blur-sm p-2.5 rounded-full 
-                             text-white hover:bg-gray-700/80"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setIsSearchOpen(true)}
-                    onMouseEnter={() => setHoveredButton('search')}
-                    onMouseLeave={() => setHoveredButton(null)}
+                  <motion.div 
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                   >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                  </motion.div>
+                </motion.button>
+                <AnimatePresence>
+                  {hoveredButton === 'theme' && (
                     <motion.div
-                      animate={isSearchOpen ? { rotate: 360 } : { rotate: 0 }}
-                      transition={{ duration: 0.3 }}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      className="absolute mt-2 bg-gray-800/90 text-white text-xs py-1 px-2 rounded whitespace-nowrap"
+                      style={{
+                        top: '100%',
+                        right: '0'
+                      }}
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                      </svg>
+                      Change Theme
                     </motion.div>
-                  </motion.button>
-                  <AnimatePresence>
-                    {hoveredButton === 'search' && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
-                        className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 
-                                 bg-gray-800/90 text-white text-xs py-1 px-2 rounded whitespace-nowrap"
-                      >
-                        {buttonTooltip.search}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-
-                <motion.div className="relative">
-                  <motion.button
-                    className="bg-gray-800/80 backdrop-blur-sm p-2.5 rounded-full 
-                             text-white hover:bg-gray-700/80"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setIsShelfOpen(prev => !prev)}
-                    onMouseEnter={() => setHoveredButton('cassettes')}
-                    onMouseLeave={() => setHoveredButton(null)}
-                  >
-                    <motion.div
-                      animate={isShelfOpen ? { rotate: 360 } : { rotate: 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                      </svg>
-                    </motion.div>
-                  </motion.button>
-                  <AnimatePresence>
-                    {hoveredButton === 'cassettes' && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
-                        className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 
-                                 bg-gray-800/90 text-white text-xs py-1 px-2 rounded whitespace-nowrap"
-                      >
-                        {buttonTooltip.cassettes}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
 
@@ -487,29 +496,13 @@ function App() {
               />
             </div>
 
-            {/* Color controls - moved to a more accessible position on mobile */}
-            <motion.div className="fixed bottom-20 right-4 z-50 flex flex-col gap-2 sm:flex-row sm:bottom-4">
-              <div className="bg-gray-800/80 backdrop-blur-sm p-2 rounded-lg flex items-center gap-2">
-                <label htmlFor="playerColor" className="text-white text-sm hidden sm:inline">Theme</label>
-                <input
-                  id="playerColor"
-                  type="color"
-                  value={playerColor}
-                  onChange={(e) => setPlayerColor(e.target.value)}
-                  className="w-8 h-8 rounded cursor-pointer"
-                />
-              </div>
-              <div className="bg-gray-800/80 backdrop-blur-sm p-2 rounded-lg flex items-center gap-2">
-                <label htmlFor="accentColor" className="text-white text-sm hidden sm:inline">Accent</label>
-                <input
-                  id="accentColor"
-                  type="color"
-                  value={accentColor}
-                  onChange={(e) => setAccentColor(e.target.value)}
-                  className="w-8 h-8 rounded cursor-pointer"
-                />
-              </div>
-            </motion.div>
+            {/* Color Picker */}
+            <ColorPicker
+              playerColor={playerColor}
+              accentColor={accentColor}
+              onPlayerColorChange={setPlayerColor}
+              onAccentColorChange={setAccentColor}
+            />
 
             {/* Search Modal */}
             <AnimatePresence>
@@ -537,6 +530,13 @@ function App() {
                 />
               )}
             </AnimatePresence>
+
+            {/* About Modal */}
+            <AboutModal 
+              isOpen={isAboutOpen}
+              onClose={() => setIsAboutOpen(false)}
+              accentColor={accentColor}
+            />
 
             {/* Toast Container */}
             <ToastContainer toasts={toasts} removeToast={removeToast} />

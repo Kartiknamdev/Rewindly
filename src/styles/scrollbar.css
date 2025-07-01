@@ -1,25 +1,38 @@
 /* Custom scrollbar styles */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;  /* Thinner scrollbar */
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
+  margin: 4px 0;  /* Add some margin for a floating look */
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: var(--scrollbar-color);
-  border-radius: 3px;
-  transition: background-color 0.3s ease;
+  background-color: var(--scrollbar-color, rgba(255, 255, 255, 0.3));
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: var(--scrollbar-color);
-  opacity: 0.8;
+  background-color: var(--scrollbar-hover-color, rgba(255, 255, 255, 0.5));
+}
+
+/* Hide scrollbar when not hovering */
+.custom-scrollbar {
+  transition: scrollbar-color 0.2s ease;
+}
+
+.custom-scrollbar:not(:hover)::-webkit-scrollbar-thumb {
+  opacity: 0.5;
 }
 
 /* For Firefox */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-color) transparent;
+  scrollbar-color: var(--scrollbar-color, rgba(255, 255, 255, 0.3)) transparent;
+}
+
+.custom-scrollbar:hover {
+  scrollbar-color: var(--scrollbar-hover-color, rgba(255, 255, 255, 0.5)) transparent;
 }

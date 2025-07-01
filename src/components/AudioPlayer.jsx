@@ -6,6 +6,7 @@ export const AudioPlayer = forwardRef(({ currentTrack, isPlaying, onPlayingChang
     if (currentTrack?.preview) {
       ref.current.src = currentTrack.preview;
       ref.current.volume = volume;
+      ref.current.loop = true; // Enable looping
       if (isPlaying) {
         ref.current.play().catch(error => {
           console.error('Audio playback failed:', error);

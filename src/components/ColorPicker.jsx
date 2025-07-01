@@ -3,13 +3,68 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 // Predefined color themes
 const colorThemes = [
+  // Classic & Basic Themes
   { name: 'Classic Purple', player: '#6366f1', accent: '#ffffff' },
   { name: 'Midnight Blue', player: '#1e3a8a', accent: '#60a5fa' },
   { name: 'Forest Green', player: '#064e3b', accent: '#34d399' },
   { name: 'Dark Rose', player: '#9f1239', accent: '#fb7185' },
   { name: 'Ocean', player: '#0c4a6e', accent: '#38bdf8' },
+  
+  // Warm & Cozy
   { name: 'Sunset', player: '#7c2d12', accent: '#fb923c' },
-  { name: 'Neon', player: '#4c1d95', accent: '#a78bfa' }
+  { name: 'Autumn', player: '#92400e', accent: '#f97316' },
+  { name: 'Coffee', player: '#3f2917', accent: '#a16207' },
+  { name: 'Golden Hour', player: '#92400e', accent: '#fde68a' },
+  { name: 'Desert Sand', player: '#78350f', accent: '#fcd34d' },
+  
+  // Cool & Vibrant
+  { name: 'Neon', player: '#4c1d95', accent: '#a78bfa' },
+  { name: 'Electric', player: '#312e81', accent: '#4ade80' },
+  { name: 'Ice Blue', player: '#0c4a6e', accent: '#7dd3fc' },
+  { name: 'Northern Lights', player: '#064e3b', accent: '#67e8f9' },
+  { name: 'Deep Ocean', player: '#1e3a8a', accent: '#38bdf8' },
+  
+  // Retro & Vintage
+  { name: 'Retro Gold', player: '#854d0e', accent: '#fbbf24' },
+  { name: 'Vapor Wave', player: '#86198f', accent: '#22d3ee' },
+  { name: 'Vinyl', player: '#1f2937', accent: '#9ca3af' },
+  { name: 'Sepia', player: '#78350f', accent: '#d6d3d1' },
+  { name: 'Old Radio', player: '#44403c', accent: '#a8a29e' },
+  
+  // Nature Inspired
+  { name: 'Forest Mist', player: '#064e3b', accent: '#6ee7b7' },
+  { name: 'Mountain Dawn', player: '#374151', accent: '#93c5fd' },
+  { name: 'Spring Bloom', player: '#065f46', accent: '#fcd34d' },
+  { name: 'Ocean Breeze', player: '#0e7490', accent: '#67e8f9' },
+  { name: 'Twilight', player: '#312e81', accent: '#818cf8' },
+  
+  // Modern & Sleek
+  { name: 'Matrix', player: '#064e3b', accent: '#4ade80' },
+  { name: 'Cyberpunk', player: '#581c87', accent: '#fbbf24' },
+  { name: 'Minimal', player: '#18181b', accent: '#e4e4e7' },
+  { name: 'Tech Blue', player: '#1e40af', accent: '#3b82f6' },
+  { name: 'Dark Mode', player: '#18181b', accent: '#6b7280' },
+  
+  // Soft & Pastel
+  { name: 'Cherry Blossom', player: '#831843', accent: '#f9a8d4' },
+  { name: 'Lavender', player: '#5b21b6', accent: '#ddd6fe' },
+  { name: 'Mint', player: '#065f46', accent: '#a7f3d0' },
+  { name: 'Peach', player: '#9a3412', accent: '#fed7aa' },
+  { name: 'Baby Blue', player: '#1e40af', accent: '#bfdbfe' },
+  
+  // Dark & Mysterious
+  { name: 'Blood Moon', player: '#7f1d1d', accent: '#fca5a5' },
+  { name: 'Deep Space', player: '#020617', accent: '#818cf8' },
+  { name: 'Dark Forest', player: '#052e16', accent: '#4ade80' },
+  { name: 'Midnight', player: '#020617', accent: '#6366f1' },
+  { name: 'Shadow', player: '#18181b', accent: '#52525b' },
+  
+  // Metallic
+  { name: 'Rose Gold', player: '#9f1239', accent: '#fda4af' },
+  { name: 'Silver', player: '#334155', accent: '#cbd5e1' },
+  { name: 'Bronze', player: '#783f04', accent: '#fbbf24' },
+  { name: 'Chrome', player: '#1f2937', accent: '#e5e7eb' },
+  { name: 'Platinum', player: '#0f172a', accent: '#94a3b8' }
 ];
 
 export function ColorPicker({ playerColor, accentColor, onPlayerColorChange, onAccentColorChange }) {
@@ -64,56 +119,88 @@ export function ColorPicker({ playerColor, accentColor, onPlayerColorChange, onA
             initial={{ opacity: 0, scale: 0.95, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
-            className="absolute bottom-full right-0 mb-2 w-48 bg-gray-800/90 backdrop-blur-sm rounded-lg shadow-xl overflow-hidden"
+            className="absolute bottom-full right-0 mb-2 w-64 bg-gray-800/90 backdrop-blur-sm rounded-lg shadow-xl overflow-hidden"
           >
-            <div className="p-2 space-y-1">
-              {/* Predefined Themes */}
-              {!customMode && colorThemes.map((theme) => (
-                <motion.button
-                  key={theme.name}
-                  onClick={() => applyTheme(theme)}
-                  className="w-full flex items-center gap-3 p-2 text-left text-white hover:bg-gray-700/50 rounded-md transition-colors"
-                  whileHover={{ x: 4 }}
-                >
+            {/* Content Container */}
+            <div className="flex flex-col">
+              {/* Themes List */}
+              <div className={`${customMode ? 'hidden' : ''}`}>
+                <div className="p-2 space-y-1 overflow-y-auto custom-scrollbar max-h-[40vh]">
+                  {colorThemes.map((theme) => (
+                    <motion.button
+                      key={theme.name}
+                      onClick={() => applyTheme(theme)}
+                      className="w-full flex items-center gap-2 py-1.5 px-2 text-left text-white hover:bg-gray-700/50 rounded-md transition-colors"
+                      whileHover={{ x: 2 }}
+                    >
+                      <div 
+                        className="w-4 h-4 rounded-full flex-shrink-0"
+                        style={{
+                          background: `linear-gradient(135deg, ${theme.player}, ${theme.accent})`
+                        }}
+                      />
+                      <span className="text-xs truncate">{theme.name}</span>
+                    </motion.button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Custom Color Picker */}
+              <div className={`${!customMode ? 'hidden' : ''}`}>
+                <div className="p-3 space-y-3">
+                  {/* Player Color */}
+                  <div>
+                    <label className="text-white text-xs mb-1 block">Player Color</label>
+                    <div className="flex gap-2 items-center">
+                      <input 
+                        type="color" 
+                        value={playerColor}
+                        onChange={(e) => onPlayerColorChange(e.target.value)}
+                        className="w-8 h-8 rounded cursor-pointer"
+                      />
+                      <input 
+                        type="text" 
+                        value={playerColor}
+                        onChange={(e) => onPlayerColorChange(e.target.value)}
+                        className="flex-1 bg-gray-700/50 text-white text-xs px-2 py-1 rounded"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Accent Color */}
+                  <div>
+                    <label className="text-white text-xs mb-1 block">Accent Color</label>
+                    <div className="flex gap-2 items-center">
+                      <input 
+                        type="color" 
+                        value={accentColor}
+                        onChange={(e) => onAccentColorChange(e.target.value)}
+                        className="w-8 h-8 rounded cursor-pointer"
+                      />
+                      <input 
+                        type="text" 
+                        value={accentColor}
+                        onChange={(e) => onAccentColorChange(e.target.value)}
+                        className="flex-1 bg-gray-700/50 text-white text-xs px-2 py-1 rounded"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Preview */}
                   <div 
-                    className="w-6 h-6 rounded-full"
+                    className="h-12 rounded-md"
                     style={{
-                      background: `linear-gradient(135deg, ${theme.player}, ${theme.accent})`
+                      background: `linear-gradient(135deg, ${playerColor}, ${accentColor})`
                     }}
                   />
-                  <span className="text-sm">{theme.name}</span>
-                </motion.button>
-              ))}
-
-              {/* Custom Color Mode */}
-              {customMode && (
-                <div className="space-y-3 p-2">
-                  <div className="space-y-2">
-                    <label className="text-white text-sm block">Player Color</label>
-                    <input 
-                      type="color" 
-                      value={playerColor}
-                      onChange={(e) => onPlayerColorChange(e.target.value)}
-                      className="w-full h-8 rounded cursor-pointer"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-white text-sm block">Accent Color</label>
-                    <input 
-                      type="color" 
-                      value={accentColor}
-                      onChange={(e) => onAccentColorChange(e.target.value)}
-                      className="w-full h-8 rounded cursor-pointer"
-                    />
-                  </div>
                 </div>
-              )}
+              </div>
 
-              {/* Toggle Custom Mode Button */}
+              {/* Toggle Button */}
               <motion.button
                 onClick={() => setCustomMode(!customMode)}
-                className="w-full flex items-center justify-center gap-2 p-2 mt-1 text-white text-sm hover:bg-gray-700/50 rounded-md transition-colors border-t border-white/10"
-                whileHover={{ y: -2 }}
+                className="w-full flex items-center justify-center gap-2 py-2 text-white text-xs hover:bg-gray-700/50 transition-colors border-t border-white/10"
+                whileHover={{ backgroundColor: 'rgba(55, 65, 81, 0.5)' }}
               >
                 {customMode ? (
                   <>

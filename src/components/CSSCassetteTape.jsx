@@ -25,10 +25,10 @@ export function CSSCassetteTape({
   const leftReelAnimation = isPlaying ? {
     animate: { 
       rotate: -360,
-      scale: [1, 1.05, 1],
+      scale: [1,1.05, 1],
     },
     transition: { 
-      rotate: { duration: 2, repeat: Infinity, ease: "linear" },
+      rotate: { duration: 4, repeat: Infinity, ease: "linear" },
       scale: { duration: 1, repeat: Infinity, ease: "easeInOut" }
     }
   } : {};
@@ -39,7 +39,7 @@ export function CSSCassetteTape({
       scale: [1, 1.05, 1],
     },
     transition: { 
-      rotate: { duration: 2, repeat: Infinity, ease: "linear" },
+      rotate: { duration: 4, repeat: Infinity, ease: "linear" },
       scale: { duration: 1, repeat: Infinity, ease: "easeInOut", delay: 0.5 }
     }
   } : {};
@@ -179,59 +179,44 @@ export function CSSCassetteTape({
         <div className="absolute inset-x-0 top-2 flex justify-between px-6">
           {/* Left reel */}
           <motion.div 
-            className="w-12 h-12 rounded-full relative"
+            className="w-12 h-12 rounded-full relative flex items-center justify-center"
             style={{ 
-              background: `linear-gradient(45deg, ${accentColor}40, transparent)`,
-              boxShadow: `inset 0 0 10px ${accentColor}60, 0 0 15px ${accentColor}30`
+              background: `radial-gradient(circle at 60% 40%, #e5e7eb 60%, #b0b3b8 90%, #444 100%)`,
+              boxShadow: `inset 0 0 10px ${accentColor}60, 0 0 15px ${accentColor}30, 0 2px 8px #0002`
             }}
-            {...leftReelAnimation}
+            animate={isPlaying ? { rotate: -360, scale: [1,1.05,1] } : {}}
+            transition={isPlaying ? { rotate: { duration: 4, repeat: Infinity, ease: "linear" }, scale: { duration: 1, repeat: Infinity, ease: "easeInOut" } } : {}}
           >
-            {/* Outer ring */}
-            <motion.div 
-              className="absolute inset-0 rounded-full border-4"
-              style={{ borderColor: `${accentColor}90` }}
-              animate={isPlaying ? { scale: [1, 1.05, 1] } : {}}
-              transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
-            />
-            
-            {/* Inner circle */}
-            <div className="absolute inset-[20%] rounded-full bg-gray-900/50 
-                          border-2 border-gray-900/30" />
-            
-            {/* Reel spokes */}
-            {[...Array(6)].map((_, i) => (
-              <motion.div 
-                key={i}
-                className="absolute inset-0 w-[2px] h-full origin-center"
-                style={{ 
-                  background: `linear-gradient(${accentColor}90, transparent)`,
-                  transform: `rotate(${i * 30}deg)`,
-                  filter: 'blur(0.5px)'
-                }}
-                animate={isPlaying ? {
-                  opacity: [0.5, 1, 0.5]
-                } : {}}
-                transition={{
-                  duration: 1,
-                  repeat: Infinity,
-                  delay: i * 0.1
-                }}
-              />
-            ))}
-
-            {/* Decorative dots */}
-            {[...Array(4)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute w-1.5 h-1.5 rounded-full"
-                style={{
-                  background: accentColor,
-                  top: '50%',
-                  left: '50%',
-                  transform: `rotate(${i * 90}deg) translateY(-150%)`,
-                }}
-              />
-            ))}
+            {/* Outer ring for separation */}
+            <div className="absolute inset-0 rounded-full border-2 border-gray-700/80" style={{boxShadow:'0 0 4px #0006'}} />
+            {/* Metallic hub with gradient */}
+            <div className="relative w-6 h-6 rounded-full border-2 border-gray-400 shadow-inner flex items-center justify-center"
+              style={{
+                background: 'radial-gradient(circle at 60% 40%, #f3f4f6 60%, #b0b3b8 90%, #444 100%)',
+                boxShadow: '0 1px 4px #0004, 0 -1px 2px #fff4 inset'
+              }}
+            >
+              {/* Reel holes, smaller and closer to center */}
+              {[...Array(6)].map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute w-1 h-1 bg-gray-700 rounded-full shadow-md"
+                  style={{
+                    left: '50%',
+                    top: '50%',
+                    boxShadow: '0 1px 2px #000a',
+                    border: '1px solid #222',
+                    background: 'radial-gradient(circle, #222 60%, #444 100%)',
+                    transform: `translate(-50%, -50%) rotate(${i * 60 + (i%2===0?2:-2)}deg) translateY(-1.2em)`
+                  }}
+                />
+              ))}
+              {/* Center pin with metallic shine */}
+              <div className="absolute w-2.5 h-2.5 bg-gradient-to-br from-gray-400 via-gray-200 to-gray-600 rounded-full border border-gray-700 shadow-inner" style={{left:'50%',top:'50%',transform:'translate(-50%,-50%)', boxShadow:'0 0 4px #fff8'}} />
+            </div>
+            {/* Subtle highlight and shadow for depth */}
+            <div className="absolute left-2 top-2 w-5 h-2 rounded-full bg-white/30 blur-sm opacity-70" />
+            <div className="absolute right-2 bottom-2 w-5 h-2 rounded-full bg-black/20 blur-sm opacity-60" />
           </motion.div>
           
           {/* Tape visualization */}
@@ -249,60 +234,44 @@ export function CSSCassetteTape({
 
           {/* Right reel (mirror of left) */}
           <motion.div 
-            className="w-12 h-12 rounded-full relative"
+            className="w-12 h-12 rounded-full relative flex items-center justify-center"
             style={{ 
-              background: `linear-gradient(45deg, ${accentColor}40, transparent)`,
-              boxShadow: `inset 0 0 10px ${accentColor}60, 0 0 15px ${accentColor}30`
+              background: `radial-gradient(circle at 60% 40%, #e5e7eb 60%, #b0b3b8 90%, #444 100%)`,
+              boxShadow: `inset 0 0 10px ${accentColor}60, 0 0 15px ${accentColor}30, 0 2px 8px #0002`
             }}
-            {...rightReelAnimation}
+            animate={isPlaying ? { rotate: 360, scale: [1,1.05,1] } : {}}
+            transition={isPlaying ? { rotate: { duration: 4, repeat: Infinity, ease: "linear" }, scale: { duration: 1, repeat: Infinity, ease: "easeInOut", delay: 0.5 } } : {}}
           >
-            <motion.div 
-              className="absolute inset-0 rounded-full border-4"
-              style={{ borderColor: `${accentColor}90` }}
-              animate={isPlaying ? { scale: [1, 1.05, 1] } : {}}
-              transition={{ duration: 1, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-            />
-            
-            <div className="absolute inset-[20%] rounded-full bg-gray-900/50 
-                          border-2 border-gray-900/30" />
-            
-            {[...Array(6)].map((_, i) => (
-              <motion.div 
-                key={i}
-                className="absolute inset-0 w-[2px] h-full origin-center"
-                style={{ 
-                  background: `linear-gradient(${accentColor}90, transparent)`,
-                  transform: `rotate(${i * 30}deg)`,
-                  filter: 'blur(0.5px)'
-                }}
-                animate={isPlaying ? {
-                  opacity: [0.5, 1, 0.5]
-                } : {}}
-                transition={{
-                  duration: 1,
-                  repeat: Infinity,
-                  delay: i * 0.1
-                }}
-              />
-            ))}
-
-            {[...Array(4)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute w-1.5 h-1.5 rounded-full"
-                style={{
-                  background: accentColor,
-                  top: '50%',
-                  left: '50%',
-                  transform: `rotate(${i * 90}deg) translateY(-150%)`,
-                }}
-              />
-            ))}
+            <div className="absolute inset-0 rounded-full border-2 border-gray-700/80" style={{boxShadow:'0 0 4px #0006'}} />
+            <div className="relative w-6 h-6 rounded-full border-2 border-gray-400 shadow-inner flex items-center justify-center"
+              style={{
+                background: 'radial-gradient(circle at 60% 40%, #f3f4f6 60%, #b0b3b8 90%, #444 100%)',
+                boxShadow: '0 1px 4px #0004, 0 -1px 2px #fff4 inset'
+              }}
+            >
+              {[...Array(6)].map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute w-1 h-1 bg-gray-700 rounded-full shadow-md"
+                  style={{
+                    left: '50%',
+                    top: '50%',
+                    boxShadow: '0 1px 2px #000a',
+                    border: '1px solid #222',
+                    background: 'radial-gradient(circle, #222 60%, #444 100%)',
+                    transform: `translate(-50%, -50%) rotate(${i * 60 + (i%2===0?2:-2)}deg) translateY(-1.2em)`
+                  }}
+                />
+              ))}
+              <div className="absolute w-2.5 h-2.5 bg-gradient-to-br from-gray-400 via-gray-200 to-gray-600 rounded-full border border-gray-700 shadow-inner" style={{left:'50%',top:'50%',transform:'translate(-50%,-50%)', boxShadow:'0 0 4px #fff8'}} />
+            </div>
+            <div className="absolute left-2 top-2 w-5 h-2 rounded-full bg-white/30 blur-sm opacity-70" />
+            <div className="absolute right-2 bottom-2 w-5 h-2 rounded-full bg-black/20 blur-sm opacity-60" />
           </motion.div>
         </div>
         
         {/* Label */}
-        <div className="absolute bottom-2 left-2 right-2 bg-white/90 rounded-sm px-3 py-2 backdrop-blur-sm">
+        <div className="absolute bottom-2 left-2 right-2 bg-white/80 rounded-sm px-3 py-1 backdrop-blur-sm">
           <div className="text-gray-900 text-sm font-bold truncate">{label}</div>
           <div className="text-gray-600 text-xs truncate">{artist}</div>
         </div>

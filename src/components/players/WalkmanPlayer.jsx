@@ -14,7 +14,7 @@ export function WalkmanPlayer({
 }) {
   // Play/Pause icon
   const PlayPauseIcon = ({ playing }) => playing ? (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor" />
       <rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor" />
     </svg>
@@ -36,7 +36,7 @@ export function WalkmanPlayer({
       <div className="absolute inset-2 bg-gray-800/30 backdrop-blur-sm rounded-lg p-4 border border-white/5">
         {/* Retro brand logo */}
         <motion.div 
-          className="absolute top-2 right-2 text-xs font-bold tracking-widest"
+          className="absolute top-0.5 right-2 text-xs font-bold tracking-widest"
           style={{ color: accentColor }}
           animate={{ opacity: [0.6, 1, 0.6] }}
           transition={{ duration: 2, repeat: Infinity }}
@@ -99,52 +99,68 @@ export function WalkmanPlayer({
             <div className="absolute inset-4 bg-gray-800/80 rounded flex items-center justify-center">
               {/* Left reel */}
               <motion.div 
-                className="absolute left-4 w-16 h-16 rounded-full"
+                className="absolute left-4 w-16 h-16 rounded-full flex items-center justify-center"
                 style={{
                   background: `radial-gradient(circle at 40% 40%, ${accentColor}20, transparent)`,
-                  border: `2px solid ${accentColor}40`
+                  border: `2px solid ${accentColor}40`,
+                  boxShadow: `0 2px 8px ${accentColor}30` // subtle shadow
                 }}
                 animate={{ rotate: 360 }}
                 transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
               >
-                {/* Reel details */}
-                <div className="absolute inset-2 rounded-full border-2 border-gray-700" />
-                {[...Array(6)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute inset-0 w-0.5 h-full origin-center"
-                    style={{
-                      background: accentColor,
-                      transform: `rotate(${i * 60}deg)`,
-                      opacity: 0.3
-                    }}
-                  />
-                ))}
+                {/* Reel outer ring */}
+                <div className="absolute inset-2 rounded-full border-2 border-gray-700 bg-gray-900/60" />
+                {/* Reel hub with holes */}
+                <div className="relative w-7 h-7 rounded-full bg-gray-300/80 border-2 border-gray-400 shadow-inner flex items-center justify-center">
+                  {[...Array(6)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="absolute w-2 h-2 bg-gray-700 rounded-full shadow"
+                      style={{
+                        left: '50%',
+                        top: '50%',
+                        transform: `translate(-50%, -50%) rotate(${i * 60}deg) translateY(-2.7ch)`
+                      }}
+                    />
+                  ))}
+                  {/* Center pin */}
+                  <div className="absolute w-2 h-2 bg-gray-500 rounded-full border border-gray-700" style={{left:'50%',top:'50%',transform:'translate(-50%,-50%)'}} />
+                </div>
+                {/* Subtle highlight */}
+                <div className="absolute left-2 top-2 w-6 h-2 rounded-full bg-white/20 blur-sm" />
               </motion.div>
 
               {/* Right reel */}
               <motion.div 
-                className="absolute right-4 w-16 h-16 rounded-full"
+                className="absolute right-4 w-16 h-16 rounded-full flex items-center justify-center"
                 style={{
                   background: `radial-gradient(circle at 40% 40%, ${accentColor}20, transparent)`,
-                  border: `2px solid ${accentColor}40`
+                  border: `2px solid ${accentColor}40`,
+                  boxShadow: `0 2px 8px ${accentColor}30`
                 }}
                 animate={{ rotate: 360 }}
                 transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
               >
-                {/* Reel details */}
-                <div className="absolute inset-2 rounded-full border-2 border-gray-700" />
-                {[...Array(6)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute inset-0 w-0.5 h-full origin-center"
-                    style={{
-                      background: accentColor,
-                      transform: `rotate(${i * 60}deg)`,
-                      opacity: 0.3
-                    }}
-                  />
-                ))}
+                {/* Reel outer ring */}
+                <div className="absolute inset-2 rounded-full border-2 border-gray-700 bg-gray-900/60" />
+                {/* Reel hub with holes */}
+                <div className="relative w-7 h-7 rounded-full bg-gray-300/80 border-2 border-gray-400 shadow-inner flex items-center justify-center">
+                  {[...Array(6)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="absolute w-2 h-2 bg-gray-700 rounded-full shadow"
+                      style={{
+                        left: '50%',
+                        top: '50%',
+                        transform: `translate(-50%, -50%) rotate(${i * 60}deg) translateY(-2.7ch)`
+                      }}
+                    />
+                  ))}
+                  {/* Center pin */}
+                  <div className="absolute w-2 h-2 bg-gray-500 rounded-full border border-gray-700" style={{left:'50%',top:'50%',transform:'translate(-50%,-50%)'}} />
+                </div>
+                {/* Subtle highlight */}
+                <div className="absolute left-2 top-2 w-6 h-2 rounded-full bg-white/20 blur-sm" />
               </motion.div>
 
               {/* Tape running animation */}

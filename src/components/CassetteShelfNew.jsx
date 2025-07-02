@@ -121,7 +121,7 @@ export function CassetteShelf({
                       key={cassette.id}
                       variants={itemVariants}
                       layout="position"
-                      className="relative group"
+                      className="relative group z-10 hover:z-30 focus-within:z-30"
                       initial={{ scale: 0.98, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       exit={{ scale: 0.98, opacity: 0 }}

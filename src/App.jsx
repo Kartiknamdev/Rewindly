@@ -67,6 +67,7 @@ function App() {
   const [isShelfOpen, setIsShelfOpen] = useState(window.innerWidth >= 1024); // Open by default on desktop
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [showTutorial, setShowTutorial] = useState(true);
+  const [backgroundMode, setBackgroundMode] = useState('albumArt'); // 'albumArt' or 'gradient'
   const audioRef = useRef(null);
   const { toasts, addToast, removeToast } = useToast();
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -336,6 +337,23 @@ function App() {
             background: { duration: 0.8 }
           }}
         >
+          {/* Album Art Glassmorphic Background (toggle) */}
+          {backgroundMode === 'albumArt' && currentTrack?.albumArt && (
+            <div
+              className="fixed inset-0 w-full h-full z-0 pointer-events-none select-none"
+              aria-hidden="true"
+            >
+              <img
+                src={currentTrack.albumArt}
+                alt="Album Art Background"
+                className="w-full h-full object-cover blur-2xl opacity-60 scale-110"
+                style={{ filter: 'blur(25px) brightness(0.7)', objectPosition: 'center' }}
+                draggable="false"
+              />
+              <div className="absolute inset-0 bg-black/55" />
+            </div>
+          )}
+
           <Suspense fallback={<div className="text-white">Loading...</div>}>
             {/* Top Navigation Bar */}
             <div className="fixed top-0 left-0 right-0 p-4 flex items-center justify-between z-50">
@@ -523,6 +541,39 @@ function App() {
                 playerColor={playerColor}
                 accentColor={accentColor}
               />
+            </div>
+
+            {/* Toggle for background mode - circular, tap to switch, matches color picker */}
+            <div className="fixed bottom-36 right-4 z-50 flex items-center gap-3">
+              <button
+                className="w-10 h-10 rounded-full flex items-center justify-center shadow-lg border border-white/10 backdrop-blur-md transition-all focus:outline-none group overflow-hidden p-0.5"
+                aria-label={backgroundMode === 'gradient' ? 'Switch to Album Art Background' : 'Switch to Gradient Background'}
+                title={backgroundMode === 'gradient' ? 'Switch to Album Art Background' : 'Switch to Gradient Background'}
+                onClick={() => setBackgroundMode(backgroundMode === 'gradient' ? 'albumArt' : 'gradient')}
+                disabled={backgroundMode === 'gradient' ? !currentTrack?.albumArt : false}
+                style={{
+                  background: `linear-gradient(135deg, ${playerColor}, ${accentColor})`,
+                  boxShadow: `0 0 10px ${playerColor}40, 0 2px 8px ${accentColor}30`
+                }}
+                whileHover={{ scale: 1.13, boxShadow: `0 0 24px 6px ${accentColor}80, 0 2px 12px ${playerColor}60` }}
+                whileTap={{ scale: 0.97 }}
+              >
+                {backgroundMode === 'gradient' ? (
+                  // Palette icon for gradient
+                  <svg className="h-6 w-6 text-white drop-shadow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3C7.03 3 3 7.03 3 12c0 3.87 3.13 7 7 7h1a2 2 0 002-2v-1a2 2 0 012-2h1a2 2 0 002-2c0-4.97-4.03-9-9-9z" />
+                    <circle cx="8.5" cy="10.5" r="1.5" fill="white" />
+                    <circle cx="15.5" cy="10.5" r="1.5" fill="white" />
+                  </svg>
+                ) : (
+                  // Image icon for album art
+                  <svg className="h-6 w-6 text-white drop-shadow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <rect x="3" y="5" width="18" height="14" rx="3" strokeWidth={2} />
+                    <circle cx="8.5" cy="10.5" r="1.5" fill="white" />
+                    <path strokeWidth={2} d="M21 19l-5.5-7-4.5 6-3-4-4 5" />
+                  </svg>
+                )}
+              </button>
             </div>
 
             {/* Color Picker */}

@@ -66,6 +66,7 @@ function App() {
   const [isPlaylistOpen, setIsPlaylistOpen] = useState(false)
   const [isShelfOpen, setIsShelfOpen] = useState(window.innerWidth >= 1024); // Open by default on desktop
   const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(true);
   const audioRef = useRef(null);
   const { toasts, addToast, removeToast } = useToast();
   const [hoveredButton, setHoveredButton] = useState(null);
@@ -193,7 +194,35 @@ function App() {
   };
 
   const renderPlayer = () => {
-    if (!selectedCassette) return null;
+    if (!selectedCassette) {
+      if (!showTutorial) return null;
+      return (
+        <div className="flex flex-col items-center justify-center w-full h-full min-h-[24rem]">
+          <div
+            className="bg-gray-900/80 rounded-2xl shadow-2xl p-8 max-w-lg text-center border border-white/10"
+            style={{backdropFilter: 'blur(8px)'}}
+          >
+            <h2 className="text-2xl font-bold mb-4 text-white" style={{color: accentColor}}>Welcome to Rewindly!</h2>
+            <p className="text-gray-200 mb-3">Your retro-inspired music player. Here’s how to get started:</p>
+            <ul className="text-left text-gray-300 mb-4 space-y-2">
+              <li><b>🔍 Search:</b> Click the <b>search</b> icon (top left) to find and add tracks.</li>
+              <li><b>💾 Playlist:</b> Save your favorite cassettes to your playlist for quick access.</li>
+              <li><b>📼 Cassettes:</b> Your searched tracks appear as cassettes. Click a cassette to play it.</li>
+              <li><b>🎨 Themes:</b> Switch player themes and colors using the bottom right controls.</li>
+              <li><b>🔊 Controls:</b> Use the bottom bar to play, pause, skip, and adjust volume.</li>
+               <li><b>Note :</b> The songs played are preview songs</li>
+            </ul>
+            <button
+              className="mt-2 px-6 py-2 rounded-lg font-semibold text-white shadow bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 hover:brightness-110 transition"
+              style={{background: `linear-gradient(90deg, ${playerColor}, ${accentColor})`}}
+              onClick={() => setShowTutorial(false)}
+            >
+              Got it!
+            </button>
+          </div>
+        </div>
+      );
+    }
 
     const props = {
       cassette: selectedCassette,

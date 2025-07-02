@@ -35,8 +35,60 @@ export function CSSCassettePlayer({
       animate={{ scale: 1, opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
+      {/* Custom Play/Pause Switch - ensure it's above the main body and always visible */}
+      <style>{`
+        .css-cassette-switch { font-size: 17px; position: absolute; top: 1rem; right: 1rem; z-index: 50; }
+        .css-cassette-switch .cb { opacity: 0; width: 0; height: 0; }
+        .css-cassette-toggle {
+          position: absolute; cursor: pointer; width: 5em; height: 2.5em;
+          background: ${playerColor}; border-radius: 0.1em; transition: 0.4s;
+          font-weight: 700; overflow: hidden;
+          box-shadow: -0.3em 0 0 0 ${playerColor}, -0.3em 0.3em 0 0 ${playerColor},
+            0.3em 0 0 0 ${playerColor}, 0.3em 0.3em 0 0 ${playerColor}, 0 0.3em 0 0 ${playerColor};
+        }
+        .css-cassette-toggle > .left, .css-cassette-toggle > .right {
+          position: absolute; display: flex; width: 50%; height: 88%; background: #f3f3f3;
+          align-items: center; justify-content: center; bottom: 0; transition: all 150ms;
+          border-radius: 0.1em;
+        }
+        .css-cassette-toggle > .left {
+          color: ${isPlaying ? 'rgb(206,206,206)' : playerColor}; left: 0; transform-origin: right;
+          transform: ${isPlaying ? 'rotateX(10deg) rotateY(45deg)' : 'rotateX(10deg)'};
+        }
+        .css-cassette-toggle > .right {
+          color: ${isPlaying ? accentColor : 'rgb(206,206,206)'}; right: 1px; transform-origin: left;
+          transform: ${isPlaying ? 'rotateX(10deg) rotateY(0deg)' : 'rotateX(10deg) rotateY(-45deg)'};
+        }
+        .css-cassette-toggle > .left::before, .css-cassette-toggle > .right::before {
+          position: absolute; content: ""; width: 100%; height: 100%; background: rgb(206,206,206);
+        }
+        .css-cassette-toggle > .left::before { left: 0; top: 0; transform-origin: center left; transform: rotateY(90deg); }
+        .css-cassette-toggle > .right::before { right: 0; top: 0; transform-origin: center right; transform: rotateY(-90deg); }
+        .css-cassette-toggle > .left::after, .css-cassette-toggle > .right::after {
+          position: absolute; content: ""; width: 100%; height: 100%; background: rgb(112,112,112);
+        }
+        .css-cassette-toggle > .left::after { left: 0; bottom: 0; transform-origin: center bottom; transform: rotateX(90deg); }
+        .css-cassette-toggle > .right::after { right: 0; bottom: 0; transform-origin: center bottom; transform: rotateX(90deg); }
+      `}</style>
+      <label className="css-cassette-switch select-none">
+        <input
+          type="checkbox"
+          className="cb"
+          checked={isPlaying}
+          onChange={onPlayPause}
+          aria-label={isPlaying ? 'Pause' : 'Play'}
+        />
+        <span className="css-cassette-toggle">
+          <span className="left">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" style={{zIndex:1}}><rect x="5" y="4" width="4" height="14" rx="1.5" fill="currentColor"/><rect x="13" y="4" width="4" height="14" rx="1.5" fill="currentColor"/></svg>
+          </span>
+          <span className="right">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="currentColor" style={{zIndex:1}}><path d="M7 5v12l9-6z"/></svg>
+          </span>
+        </span>
+      </label>
       {/* Main body with glass effect */}
-      <div className="absolute inset-2 bg-gray-900/20 backdrop-blur-sm rounded-xl p-6">
+      <div className="absolute inset-2 bg-gray-900/20 backdrop-blur-sm rounded-xl p-6 z-10">
         {/* Display Screen */}
         <div className="h-16 bg-gray-900/60 rounded-lg overflow-hidden mb-4">
           <div className="h-full flex flex-col justify-center px-4">

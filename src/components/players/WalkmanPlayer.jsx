@@ -1,69 +1,293 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-export function WalkmanPlayer({ cassette, playerColor, accentColor }) {
+export function WalkmanPlayer({
+  cassette,
+  playerColor,
+  accentColor,
+  isPlaying = false,
+  onPlayPause,
+  onNext,
+  onPrevious,
+  volume = 0.5,
+  onVolumeChange
+}) {
+  // Play/Pause icon
+  const PlayPauseIcon = ({ playing }) => playing ? (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor" />
+      <rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor" />
+    </svg>
+  ) : (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <polygon points="6,4 20,12 6,20" fill="currentColor" />
+    </svg>
+  );
+
   return (
     <motion.div 
       className="relative w-80 h-[420px] rounded-xl shadow-2xl"
       style={{
-        background: `linear-gradient(45deg, ${playerColor}, ${accentColor})`
+        background: `linear-gradient(45deg, ${playerColor}, ${accentColor})`,
+        boxShadow: `0 20px 40px -10px ${playerColor}40`
       }}
     >
-      {/* Main body */}
-      <div className="absolute inset-2 bg-gray-800/30 backdrop-blur-sm rounded-lg p-4">
-        {/* Screen */}
-        <div className="bg-gray-900/60 rounded-lg p-3 mb-4">
-          <div className="text-white text-sm truncate">{cassette?.title || 'No Cassette'}</div>
-          <div className="text-gray-400 text-xs truncate">{cassette?.artist || 'Insert a cassette'}</div>
+      {/* Main body with retro styling */}
+      <div className="absolute inset-2 bg-gray-800/30 backdrop-blur-sm rounded-lg p-4 border border-white/5">
+        {/* Retro brand logo */}
+        <motion.div 
+          className="absolute top-2 right-2 text-xs font-bold tracking-widest"
+          style={{ color: accentColor }}
+          animate={{ opacity: [0.6, 1, 0.6] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          WALKMAN
+        </motion.div>
+
+        {/* LCD Screen with improved styling */}
+        <div className="bg-gray-900/60 rounded-lg p-3 mb-4 relative border border-white/10">
+          {/* LCD segments effect */}
+          <div 
+            className="absolute inset-0 opacity-5"
+            style={{
+              backgroundImage: `repeating-linear-gradient(
+                90deg,
+                ${accentColor},
+                ${accentColor} 1px,
+                transparent 1px,
+                transparent 3px
+              )`
+            }}
+          />
+          
+          {/* Text with LCD-like effect */}
+          <div 
+            className="text-sm font-mono"
+            style={{ color: accentColor }}
+          >
+            {cassette?.title || 'No Cassette'}
+            <motion.span 
+              className="ml-1"
+              animate={{ opacity: cassette ? [1, 0] : 0 }}
+              transition={{ duration: 0.8, repeat: Infinity }}
+            >
+              ▶
+            </motion.span>
+          </div>
+          <div className="text-gray-400 text-xs font-mono truncate mt-0.5">
+            {cassette?.artist || 'Insert a cassette'}
+          </div>
         </div>
 
-        {/* Cassette window */}
-        <div className="bg-gray-900/40 rounded-lg h-32 mb-4 relative">
+        {/* Cassette window with mechanism */}
+        <div className="bg-gray-900/40 rounded-lg h-32 mb-4 relative overflow-hidden backdrop-blur-sm border border-white/10">
+          {/* Window texture */}
+          <div 
+            className="absolute inset-0 opacity-10"
+            style={{
+              backgroundImage: `repeating-linear-gradient(
+                45deg,
+                ${accentColor},
+                ${accentColor} 1px,
+                transparent 1px,
+                transparent 4px
+              )`
+            }}
+          />
+
           {cassette && (
-            <div className="absolute inset-4 bg-gray-800 rounded flex items-center justify-center">
+            <div className="absolute inset-4 bg-gray-800/80 rounded flex items-center justify-center">
+              {/* Left reel */}
               <motion.div 
-                className="w-16 h-16 border-4 rounded-full"
-                style={{ borderColor: accentColor }}
+                className="absolute left-4 w-16 h-16 rounded-full"
+                style={{
+                  background: `radial-gradient(circle at 40% 40%, ${accentColor}20, transparent)`,
+                  border: `2px solid ${accentColor}40`
+                }}
                 animate={{ rotate: 360 }}
                 transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              >
+                {/* Reel details */}
+                <div className="absolute inset-2 rounded-full border-2 border-gray-700" />
+                {[...Array(6)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute inset-0 w-0.5 h-full origin-center"
+                    style={{
+                      background: accentColor,
+                      transform: `rotate(${i * 60}deg)`,
+                      opacity: 0.3
+                    }}
+                  />
+                ))}
+              </motion.div>
+
+              {/* Right reel */}
+              <motion.div 
+                className="absolute right-4 w-16 h-16 rounded-full"
+                style={{
+                  background: `radial-gradient(circle at 40% 40%, ${accentColor}20, transparent)`,
+                  border: `2px solid ${accentColor}40`
+                }}
+                animate={{ rotate: 360 }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              >
+                {/* Reel details */}
+                <div className="absolute inset-2 rounded-full border-2 border-gray-700" />
+                {[...Array(6)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute inset-0 w-0.5 h-full origin-center"
+                    style={{
+                      background: accentColor,
+                      transform: `rotate(${i * 60}deg)`,
+                      opacity: 0.3
+                    }}
+                  />
+                ))}
+              </motion.div>
+
+              {/* Tape running animation */}
+              <motion.div 
+                className="absolute top-1/2 left-12 right-12 h-1 -translate-y-1/2"
+                style={{ background: `${accentColor}40` }}
+                animate={cassette ? {
+                  opacity: [0.2, 0.4, 0.2],
+                  scaleY: [1, 1.5, 1]
+                } : {}}
+                transition={{
+                  duration: 1,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
               />
             </div>
           )}
         </div>
 
-        {/* Controls */}
+        {/* Controls with retro styling */}
         <div className="grid grid-cols-3 gap-4">
-          <button className="bg-gray-900/40 rounded-full p-3 text-white hover:bg-gray-900/60">
+          {/* Previous button */}
+          <motion.button 
+            className="bg-gray-900/40 rounded-full p-3 text-white relative overflow-hidden"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            style={{
+              border: `1px solid ${accentColor}20`,
+              boxShadow: `0 2px 8px ${playerColor}40`
+            }}
+            onClick={onPrevious}
+            aria-label="Previous"
+          >
+            <motion.div 
+              className="absolute inset-0 opacity-20"
+              animate={{ background: [
+                `linear-gradient(45deg, ${accentColor}00, ${accentColor}40)`,
+                `linear-gradient(45deg, ${accentColor}40, ${accentColor}00)`
+              ]}}
+              transition={{ duration: 1, repeat: Infinity }}
+            />
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
             </svg>
-          </button>
-          <button className="bg-gray-900/40 rounded-full p-3 text-white hover:bg-gray-900/60">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-            </svg>
-          </button>
-          <button className="bg-gray-900/40 rounded-full p-3 text-white hover:bg-gray-900/60">
+          </motion.button>
+
+          {/* Play/Pause button */}
+          <motion.button 
+            className="bg-gray-900/40 rounded-full p-3 text-white relative overflow-hidden"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            style={{
+              border: `1px solid ${accentColor}20`,
+              boxShadow: `0 2px 8px ${playerColor}40`
+            }}
+            onClick={onPlayPause}
+            aria-label={isPlaying ? "Pause" : "Play"}
+          >
+            <motion.div 
+              className="absolute inset-0"
+              style={{
+                background: cassette 
+                  ? `radial-gradient(circle at center, ${accentColor}40, transparent)`
+                  : 'transparent'
+              }}
+              animate={cassette ? { opacity: [0.5, 0.8, 0.5] } : {}}
+              transition={{ duration: 1, repeat: Infinity }}
+            />
+            <PlayPauseIcon playing={isPlaying} />
+          </motion.button>
+
+          {/* Next button */}
+          <motion.button 
+            className="bg-gray-900/40 rounded-full p-3 text-white relative overflow-hidden"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            style={{
+              border: `1px solid ${accentColor}20`,
+              boxShadow: `0 2px 8px ${playerColor}40`
+            }}
+            onClick={onNext}
+            aria-label="Next"
+          >
+            <motion.div 
+              className="absolute inset-0 opacity-20"
+              animate={{ background: [
+                `linear-gradient(-45deg, ${accentColor}00, ${accentColor}40)`,
+                `linear-gradient(-45deg, ${accentColor}40, ${accentColor}00)`
+              ]}}
+              transition={{ duration: 1, repeat: Infinity }}
+            />
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
             </svg>
-          </button>
+          </motion.button>
         </div>
 
-        {/* Volume slider */}
-        <div className="mt-4">
-          <input
-            type="range"
-            className="w-full"
-            min="0"
-            max="1"
-            step="0.01"
-          />
+        {/* Volume slider with custom styling */}
+        <div className="mt-4 relative">
+          <div className="relative">
+            <input
+              type="range"
+              className="w-full h-1.5 rounded-full appearance-none bg-gray-900/40"
+              style={{
+                backgroundImage: `linear-gradient(to right, ${accentColor}80, ${accentColor}20)`,
+                cursor: 'pointer'
+              }}
+              min="0"
+              max="1"
+              step="0.01"
+              value={volume}
+              onChange={e => onVolumeChange?.(parseFloat(e.target.value))}
+              aria-label="Volume"
+            />
+            {/* Volume slider glow effect */}
+            <motion.div
+              className="absolute inset-0 rounded-full pointer-events-none"
+              style={{ boxShadow: `0 0 10px ${accentColor}40` }}
+              animate={cassette ? { opacity: [0.3, 0.6, 0.3] } : {}}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            />
+          </div>
         </div>
 
-        {/* Headphones */}
-        <div className="absolute -right-8 top-1/2 transform -translate-y-1/2">
-          <div className="w-3 h-20 bg-gray-900 rounded-r-full" />
+        {/* Headphones connection */}
+        <div className="absolute -right-6 top-1/2 transform -translate-y-1/2">
+          <div className="w-3 h-20 bg-gray-900 rounded-r-full relative overflow-hidden">
+            {/* Metallic texture */}
+            <div 
+              className="absolute inset-0 opacity-20"
+              style={{
+                backgroundImage: `linear-gradient(
+                  to bottom,
+                  transparent,
+                  ${accentColor}40,
+                  transparent
+                )`
+              }}
+            />
+            {/* Jack connector */}
+            <div className="absolute top-1/2 -right-1 w-2 h-2 rounded-full bg-gray-600 transform -translate-y-1/2" />
+          </div>
         </div>
       </div>
     </motion.div>

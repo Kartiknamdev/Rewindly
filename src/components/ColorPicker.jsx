@@ -3,74 +3,88 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 // Predefined color themes
 const colorThemes = [
-  // Classic & Basic Themes
   { name: 'Classic Purple', player: '#6366f1', accent: '#ffffff' },
   { name: 'Midnight Blue', player: '#1e3a8a', accent: '#60a5fa' },
   { name: 'Forest Green', player: '#064e3b', accent: '#34d399' },
   { name: 'Dark Rose', player: '#9f1239', accent: '#fb7185' },
   { name: 'Ocean', player: '#0c4a6e', accent: '#38bdf8' },
-  
-  // Warm & Cozy
   { name: 'Sunset', player: '#7c2d12', accent: '#fb923c' },
-  { name: 'Autumn', player: '#92400e', accent: '#f97316' },
-  { name: 'Coffee', player: '#3f2917', accent: '#a16207' },
-  { name: 'Golden Hour', player: '#92400e', accent: '#fde68a' },
-  { name: 'Desert Sand', player: '#78350f', accent: '#fcd34d' },
-  
-  // Cool & Vibrant
   { name: 'Neon', player: '#4c1d95', accent: '#a78bfa' },
-  { name: 'Electric', player: '#312e81', accent: '#4ade80' },
-  { name: 'Ice Blue', player: '#0c4a6e', accent: '#7dd3fc' },
-  { name: 'Northern Lights', player: '#064e3b', accent: '#67e8f9' },
-  { name: 'Deep Ocean', player: '#1e3a8a', accent: '#38bdf8' },
-  
-  // Retro & Vintage
   { name: 'Retro Gold', player: '#854d0e', accent: '#fbbf24' },
   { name: 'Vapor Wave', player: '#86198f', accent: '#22d3ee' },
-  { name: 'Vinyl', player: '#1f2937', accent: '#9ca3af' },
-  { name: 'Sepia', player: '#78350f', accent: '#d6d3d1' },
-  { name: 'Old Radio', player: '#44403c', accent: '#a8a29e' },
-  
-  // Nature Inspired
-  { name: 'Forest Mist', player: '#064e3b', accent: '#6ee7b7' },
-  { name: 'Mountain Dawn', player: '#374151', accent: '#93c5fd' },
-  { name: 'Spring Bloom', player: '#065f46', accent: '#fcd34d' },
-  { name: 'Ocean Breeze', player: '#0e7490', accent: '#67e8f9' },
-  { name: 'Twilight', player: '#312e81', accent: '#818cf8' },
-  
-  // Modern & Sleek
   { name: 'Matrix', player: '#064e3b', accent: '#4ade80' },
-  { name: 'Cyberpunk', player: '#581c87', accent: '#fbbf24' },
-  { name: 'Minimal', player: '#18181b', accent: '#e4e4e7' },
-  { name: 'Tech Blue', player: '#1e40af', accent: '#3b82f6' },
-  { name: 'Dark Mode', player: '#18181b', accent: '#6b7280' },
-  
-  // Soft & Pastel
   { name: 'Cherry Blossom', player: '#831843', accent: '#f9a8d4' },
-  { name: 'Lavender', player: '#5b21b6', accent: '#ddd6fe' },
-  { name: 'Mint', player: '#065f46', accent: '#a7f3d0' },
-  { name: 'Peach', player: '#9a3412', accent: '#fed7aa' },
-  { name: 'Baby Blue', player: '#1e40af', accent: '#bfdbfe' },
-  
-  // Dark & Mysterious
+  { name: 'Arctic', player: '#1e293b', accent: '#e2e8f0' },
+  { name: 'Cyberpunk', player: '#581c87', accent: '#fbbf24' },
   { name: 'Blood Moon', player: '#7f1d1d', accent: '#fca5a5' },
   { name: 'Deep Space', player: '#020617', accent: '#818cf8' },
-  { name: 'Dark Forest', player: '#052e16', accent: '#4ade80' },
-  { name: 'Midnight', player: '#020617', accent: '#6366f1' },
-  { name: 'Shadow', player: '#18181b', accent: '#52525b' },
-  
-  // Metallic
-  { name: 'Rose Gold', player: '#9f1239', accent: '#fda4af' },
-  { name: 'Silver', player: '#334155', accent: '#cbd5e1' },
-  { name: 'Bronze', player: '#783f04', accent: '#fbbf24' },
-  { name: 'Chrome', player: '#1f2937', accent: '#e5e7eb' },
-  { name: 'Platinum', player: '#0f172a', accent: '#94a3b8' }
+  // new vivid themes below ---
+  { name: 'Lime Pop', player: '#65a30d', accent: '#d9f99d' },
+  { name: 'Bubblegum', player: '#f472b6', accent: '#f9a8d4' },
+  { name: 'Aqua Dream', player: '#06b6d4', accent: '#a7f3d0' },
+  { name: 'Citrus Punch', player: '#f59e42', accent: '#fef08a' },
+  { name: 'Royal Velvet', player: '#312e81', accent: '#a5b4fc' },
+  { name: 'Emerald Isle', player: '#059669', accent: '#6ee7b7' },
+  { name: 'Pink Lemonade', player: '#f43f5e', accent: '#fde68a' },
+  { name: 'Skyline', player: '#0ea5e9', accent: '#f472b6' },
+  { name: 'Tangerine', player: '#ea580c', accent: '#fdba74' },
+  { name: 'Minty Fresh', player: '#2dd4bf', accent: '#bbf7d0' },
+  { name: 'Golden Hour', player: '#fbbf24', accent: '#fef3c7' },
+  { name: 'Lavender Fields', player: '#a78bfa', accent: '#f3e8ff' },
+  { name: 'Peachy Keen', player: '#fb7185', accent: '#fcd34d' },
+  { name: 'Blueberry', player: '#2563eb', accent: '#a5b4fc' },
+  { name: 'Dragonfruit', player: '#be185d', accent: '#f472b6' },
+  { name: 'Cobalt', player: '#1e40af', accent: '#60a5fa' },
+  { name: 'Lava Lamp', player: '#f43f5e', accent: '#fbbf24' },
+  { name: 'Frostbite', player: '#0ea5e9', accent: '#e0e7ff' },
+  { name: 'Jade', player: '#10b981', accent: '#d1fae5' },
+  { name: 'Coral Reef', player: '#fb7185', accent: '#fca5a5' },
+  { name: 'Sunrise', player: '#f59e42', accent: '#fbbf24' },
+  { name: 'Plum', player: '#6d28d9', accent: '#f472b6' },
+  { name: 'Candy Apple', player: '#dc2626', accent: '#fca5a5' },
+  { name: 'Turquoise', player: '#14b8a6', accent: '#99f6e4' },
+  { name: 'Lemonade', player: '#fde047', accent: '#fbbf24' },
+  { name: 'Rose Quartz', player: '#f472b6', accent: '#fbcfe8' },
+  { name: 'Sapphire', player: '#2563eb', accent: '#a5b4fc' },
+  { name: 'Mango Tango', player: '#f59e42', accent: '#fbbf24' },
+  { name: 'Electric Blue', player: '#0ea5e9', accent: '#818cf8' },
+  { name: 'Grape Soda', player: '#7c3aed', accent: '#a78bfa' },
+  { name: 'Papaya', player: '#fbbf24', accent: '#fca5a5' },
+  { name: 'Mint Mojito', player: '#34d399', accent: '#a7f3d0' },
+  { name: 'Firefly', player: '#f59e42', accent: '#fef08a' },
+  { name: 'Blue Lagoon', player: '#2563eb', accent: '#38bdf8' },
+  { name: 'Pink Sky', player: '#f472b6', accent: '#f9a8d4' },
+  { name: 'Cranberry', player: '#be185d', accent: '#fca5a5' },
+  { name: 'Cactus', player: '#166534', accent: '#bbf7d0' },
+  { name: 'Orchid', player: '#a21caf', accent: '#f472b6' },
+  { name: 'Sunburst', player: '#fbbf24', accent: '#f59e42' },
+  { name: 'Lagoon', player: '#06b6d4', accent: '#a7f3d0' },
+  { name: 'Berry Smoothie', player: '#a21caf', accent: '#f472b6' },
+  { name: 'Cocoa', player: '#7c2d12', accent: '#fbbf24' },
+  { name: 'Fuchsia', player: '#d946ef', accent: '#f9a8d4' },
+  { name: 'Cyan Dream', player: '#22d3ee', accent: '#818cf8' },
+  { name: 'Limeade', player: '#84cc16', accent: '#fef08a' },
+  { name: 'Twilight', player: '#312e81', accent: '#818cf8' },
+  { name: 'Bubble Blue', player: '#38bdf8', accent: '#a5b4fc' },
+  { name: 'Peach Fuzz', player: '#fb923c', accent: '#fcd34d' },
+  { name: 'Citrus Zest', player: '#fbbf24', accent: '#f59e42' },
+  { name: 'Lollipop', player: '#f472b6', accent: '#a78bfa' },
+  { name: 'Seafoam', player: '#2dd4bf', accent: '#a7f3d0' },
+  { name: 'Royal Pink', player: '#be185d', accent: '#f472b6' },
+  { name: 'Lime Splash', player: '#a3e635', accent: '#fef08a' },
+  { name: 'Cobalt Mint', player: '#2563eb', accent: '#34d399' }
 ];
 
 export function ColorPicker({ playerColor, accentColor, onPlayerColorChange, onAccentColorChange }) {
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredButton, setHoveredButton] = useState(null);
   const [customMode, setCustomMode] = useState(false);
+
+  // Find the current theme name
+  const currentTheme = colorThemes.find(
+    t => t.player.toLowerCase() === playerColor.toLowerCase() && t.accent.toLowerCase() === accentColor.toLowerCase()
+  );
+  const currentThemeName = currentTheme ? currentTheme.name : 'Custom';
 
   const applyTheme = (theme) => {
     onPlayerColorChange(theme.player);
@@ -80,37 +94,31 @@ export function ColorPicker({ playerColor, accentColor, onPlayerColorChange, onA
 
   return (
     <div className="fixed bottom-24 right-4 z-50">
-      {/* Color Theme Toggle Button */}
-      <motion.button
-        className="bg-gray-800/80 backdrop-blur-sm p-2.5 rounded-full 
-                   text-white hover:bg-gray-700/80 relative"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => setIsOpen(!isOpen)}
-        onMouseEnter={() => setHoveredButton('color')}
-        onMouseLeave={() => setHoveredButton(null)}
-        style={{
-          background: `linear-gradient(135deg, ${playerColor}, ${accentColor})`
-        }}
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-        </svg>
-      </motion.button>
-
-      {/* Button Tooltip */}
-      <AnimatePresence>
-        {hoveredButton === 'color' && !isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            className="absolute right-full mr-2 top-1/2 -translate-y-1/2 bg-gray-800/90 text-white text-xs py-1 px-2 rounded whitespace-nowrap"
-          >
-            Change Colors
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div className="flex items-center gap-2 group relative">
+        {/* Current Theme Name (only on hover) */}
+        <span
+          className="text-xs text-white bg-gray-800/70 px-2 py-1 rounded font-medium max-w-[7.5rem] truncate select-none absolute right-14 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"
+          title={currentThemeName}
+        >
+          {currentThemeName}
+        </span>
+        {/* Color Theme Toggle Button */}
+        <motion.button
+          className="bg-gray-800/80 backdrop-blur-sm p-2.5 rounded-full text-white hover:bg-gray-700/80 relative"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setIsOpen(!isOpen)}
+          onMouseEnter={() => setHoveredButton('color')}
+          onMouseLeave={() => setHoveredButton(null)}
+          style={{
+            background: `linear-gradient(135deg, ${playerColor}, ${accentColor})`
+          }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+          </svg>
+        </motion.button>
+      </div>
 
       {/* Color Theme Menu */}
       <AnimatePresence>

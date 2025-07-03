@@ -2,11 +2,13 @@ import React, { useEffect, forwardRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const AudioPlayer = forwardRef(({ currentTrack, isPlaying, onPlayingChange, volume = 0.5 }, ref) => {
+  // Set audio source and reset position only when the track changes
   useEffect(() => {
     if (currentTrack?.preview) {
       ref.current.src = currentTrack.preview;
+      ref.current.currentTime = 0; // Reset position for new track
       ref.current.volume = volume;
-      ref.current.loop = true; // Enable looping
+      ref.current.loop = true;
       if (isPlaying) {
         ref.current.play().catch(error => {
           console.error('Audio playback failed:', error);
@@ -16,7 +18,21 @@ export const AudioPlayer = forwardRef(({ currentTrack, isPlaying, onPlayingChang
         ref.current.pause();
       }
     }
-  }, [currentTrack, isPlaying, volume]);
+  }, [currentTrack]);
+
+  // Only play/pause when isPlaying changes, without resetting src or position
+  useEffect(() => {
+    if (!ref.current) return;
+    if (!currentTrack?.preview) return;
+    if (isPlaying) {
+      ref.current.play().catch(error => {
+        console.error('Audio playback failed:', error);
+        onPlayingChange?.(false);
+      });
+    } else {
+      ref.current.pause();
+    }
+  }, [isPlaying]);
 
   // Handle audio state changes
   useEffect(() => {

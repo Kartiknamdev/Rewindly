@@ -63,7 +63,7 @@ function App() {
   const [volume, setVolume] = useLocalStorage('volume', 0.5);
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [selectedCassette, setSelectedCassette] = useState(null)
-  const [isPlaylistOpen, setIsPlaylistOpen] = useState(false)
+  const [isPlaylistOpen, setIsPlaylistOpen] = useState(false);
   const [isShelfOpen, setIsShelfOpen] = useState(window.innerWidth >= 1024); // Open by default on desktop
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [showTutorial, setShowTutorial] = useState(true);
@@ -71,6 +71,7 @@ function App() {
   const audioRef = useRef(null);
   const { toasts, addToast, removeToast } = useToast();
   const [hoveredButton, setHoveredButton] = useState(null);
+  const playlistToggleRef = useRef(null);
 
   const themeLabels = {
     cassette: 'Cassette',
@@ -356,12 +357,13 @@ function App() {
 
           <Suspense fallback={<div className="text-white">Loading...</div>}>
             {/* Top Navigation Bar */}
-            <div className="fixed top-0 left-0 right-0 p-4 flex items-center justify-between z-50">
+            <div className="fixed top-0 left-0 right-0 p-4 pt-8 sm:pt-4 flex items-center justify-between z-50">
               {/* Left Side - Controls */}
               <div className="flex items-center gap-2">
                 {/* Playlist Button */}
                 <motion.div className="relative">
                   <motion.button
+                    ref={playlistToggleRef}
                     className="bg-gray-800/80 backdrop-blur-sm p-2.5 rounded-full 
                              text-white hover:bg-gray-700/80 relative"
                     whileHover={{ scale: 1.1 }}
@@ -607,6 +609,7 @@ function App() {
                   onClose={() => setIsPlaylistOpen(false)}
                   playerColor={playerColor}
                   accentColor={accentColor}
+                  toggleRef={playlistToggleRef}
                 />
               )}
             </AnimatePresence>
@@ -619,7 +622,7 @@ function App() {
             />
 
             {/* Toast Container */}
-            <ToastContainer toasts={toasts} removeToast={removeToast} />
+            <ToastContainer toasts={toasts} removeToast={removeToast} accentColor={accentColor} />
           </Suspense>
         </motion.div>
       </LayoutGroup>

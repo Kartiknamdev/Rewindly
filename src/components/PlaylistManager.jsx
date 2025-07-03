@@ -1,9 +1,35 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export function PlaylistManager({ savedTracks, onRemoveFromPlaylist, onPlayTrack, currentTrack }) {
+function isMobile() {
+  if (typeof window === 'undefined') return false;
+  return window.innerWidth < 768; // Tailwind's md breakpoint
+}
+
+export function PlaylistManager({ savedTracks, onRemoveFromPlaylist, onPlayTrack, currentTrack, onClose, toggleRef }) {
+  const containerRef = useRef(null);
+
+  // Close playlist when clicking outside, only on mobile, but ignore toggle button
+  useEffect(() => {
+    if (!isMobile()) return;
+    function handleClickOutside(event) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target) &&
+        !(toggleRef && toggleRef.current && toggleRef.current.contains(event.target))
+      ) {
+        onClose?.();
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onClose, toggleRef]);
+
   return (
     <motion.div 
+      ref={containerRef}
       className="fixed left-0 top-16 h-[calc(100%-8rem)] w-72 bg-gray-800/80 backdrop-blur-sm p-4 shadow-xl rounded-r-xl z-30"
       initial={{ x: -100, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}

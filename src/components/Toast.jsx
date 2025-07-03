@@ -1,11 +1,11 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export function Toast({ message, type = 'info', onClose }) {
+export function Toast({ message, type = 'info', onClose, accentColor = '#60a5fa' }) {
   const bgColors = {
-    success: 'bg-green-500',
-    error: 'bg-red-500',
-    info: 'bg-blue-500',
+    success: 'bg-green-500/80 backdrop-blur-md',
+    error: 'bg-red-500/80 backdrop-blur-md',
+    info: '', // will use inline style for accentColor
   };
 
   return (
@@ -14,8 +14,14 @@ export function Toast({ message, type = 'info', onClose }) {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 20, scale: 0.5 }}
       className={`fixed bottom-24 left-1/2 transform -translate-x-1/2 
-                  ${bgColors[type]} text-white px-6 py-3 rounded-full
-                  shadow-lg backdrop-blur-sm z-50 flex items-center gap-2`}
+                  ${type !== 'info' ? bgColors[type] : ''} text-white px-6 py-3 rounded-full
+                  shadow-lg z-50 flex items-center gap-2 backdrop-blur-md bg-white/10 border border-white/20`}
+      style={type === 'info' ? {
+        background: `linear-gradient(135deg, ${accentColor}CC 60%, #fff2 100%)`,
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        border: '1px solid rgba(255,255,255,0.18)',
+      } : {}}
       onClick={onClose}
     >
       {type === 'success' && (
@@ -38,7 +44,7 @@ export function Toast({ message, type = 'info', onClose }) {
   );
 }
 
-export function ToastContainer({ toasts, removeToast }) {
+export function ToastContainer({ toasts, removeToast, accentColor }) {
   return (
     <div className="fixed inset-0 pointer-events-none z-50 flex flex-col items-center justify-end pb-24 gap-2">
       <AnimatePresence>
@@ -48,6 +54,7 @@ export function ToastContainer({ toasts, removeToast }) {
               message={toast.message}
               type={toast.type}
               onClose={() => removeToast(toast.id)}
+              accentColor={accentColor}
             />
           </motion.div>
         ))}

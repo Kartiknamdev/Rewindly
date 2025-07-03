@@ -16,14 +16,14 @@ export function SpeakerPlayer({ cassette, playerColor, accentColor, isPlaying = 
   const knobAngle = volume * 270 - 135;
   return (
     <motion.div 
-      className="relative w-64 h-96 rounded-3xl shadow-2xl"
+      className="relative w-80 h-[28rem] md:w-64 md:h-96 rounded-3xl shadow-2xl"
       style={{ background: `linear-gradient(45deg, ${playerColor}, ${accentColor})` }}
     >
       {/* Main body */}
-      <div className="absolute inset-2 bg-gray-800/30 backdrop-blur-sm rounded-2xl p-4">
+      <div className="absolute inset-2 bg-gray-800/30 backdrop-blur-sm rounded-2xl p-5 md:p-4">
         {/* Top display */}
-        <div className="bg-gray-900/60 rounded-xl p-3 mb-4">
-          <div className="text-white text-sm truncate">{cassette?.title || 'No Track'}</div>
+        <div className="bg-gray-900/60 rounded-xl p-4 md:p-3 mb-4">
+          <div className="text-white text-base md:text-sm truncate">{cassette?.title || 'No Track'}</div>
           <div className="text-gray-400 text-xs truncate">{cassette?.artist || 'Connect device'}</div>
         </div>
 
@@ -121,8 +121,8 @@ export function SpeakerPlayer({ cassette, playerColor, accentColor, isPlaying = 
       </div>
 
       {/* Volume knob at bottom right with lighting */}
-      <div className="absolute bottom-8 right-8 z-20">
-        <div className="relative w-14 h-14 flex items-center justify-center">
+      <div className="absolute bottom-10 right-10 md:bottom-8 md:right-8 z-20">
+        <div className="relative w-16 h-16 md:w-14 md:h-14 flex items-center justify-center">
           {/* Outer glow */}
           <motion.div
             className="absolute inset-[-8px] rounded-full pointer-events-none"

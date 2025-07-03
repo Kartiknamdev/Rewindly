@@ -19,7 +19,7 @@ export function WalkmanPlayer({
       <rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor" />
     </svg>
   ) : (
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <polygon points="6,4 20,12 6,20" fill="currentColor" />
     </svg>
   );

@@ -93,7 +93,7 @@ export function CassetteShelf({
             }}
           >
             {/* Header with improved spacing and styling */}
-            <div className="flex items-center justify-between p-4 pb-2">
+            <div className="flex items-center justify-between p-4 pb-2 pt-20 sm:pt-4">
               <h2 className="text-white text-xl font-bold tracking-wide">Your Cassettes</h2>
               <button 
                 onClick={onClose}
@@ -108,13 +108,13 @@ export function CassetteShelf({
 
             {/* Cassettes list with grid layout */}
             <motion.div 
-              className="flex-1 overflow-y-auto px-4 custom-scrollbar"
+              className="flex-1 overflow-y-auto px-4 custom-scrollbar mt-4"
               style={{
                 '--scrollbar-color': `${accentColor}60`,
                 '--scrollbar-hover-color': `${accentColor}80`
               }}
             >
-              <div className="py-2 pb-4 grid grid-cols-2 gap-3">
+              <div className="py-4 pb-4 grid grid-cols-2 gap-3">
                 <AnimatePresence mode="wait">
                   {cassettes.slice(0, 10).map((cassette) => (
                     <motion.div

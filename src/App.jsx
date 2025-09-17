@@ -235,7 +235,9 @@ function App() {
       onPrevious: handlePrevious,
       onNext: handleNext,
       volume,
-      onVolumeChange: handleVolumeChange
+      onVolumeChange: handleVolumeChange,
+      isSaved: isTrackSaved(selectedCassette),
+      onSaveToggle: () => toggleSaveTrack(selectedCassette)
     };
 
     switch (playerTheme) {

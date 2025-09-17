@@ -11,6 +11,8 @@ export function CSSCassettePlayer({
   isPlaying,
   onVolumeChange,
   volume = 0.5,
+  isSaved,
+  onSaveToggle,
   children
 }) {
   const [volumeVisible, setVolumeVisible] = useState(false);
@@ -37,7 +39,7 @@ export function CSSCassettePlayer({
     >
       {/* Custom Play/Pause Switch - ensure it's above the main body and always visible */}
       <style>{`
-        .css-cassette-switch { font-size: 17px; position: absolute; top: 1rem; right: 1rem; z-index: 50; }
+        .css-cassette-switch { font-size: 17px; position: absolute; top: 1rem; right: 1rem; z-index: 25; }
         .css-cassette-switch .cb { opacity: 0; width: 0; height: 0; }
         .css-cassette-toggle {
           position: absolute; cursor: pointer; width: 5em; height: 2.5em;
@@ -90,8 +92,8 @@ export function CSSCassettePlayer({
       {/* Main body with glass effect */}
       <div className="absolute inset-2 bg-gray-900/20 backdrop-blur-sm rounded-xl p-6 z-10">
         {/* Display Screen */}
-        <div className="h-16 bg-gray-900/60 rounded-lg overflow-hidden mb-4">
-          <div className="h-full flex flex-col justify-center px-4">
+        <div className="h-16 bg-gray-900/60 rounded-lg overflow-hidden mb-4 flex items-center justify-between px-4">
+          <div className="flex-1 overflow-hidden">
             <div className="text-white text-lg font-medium truncate">
               {cassette?.title || 'No Cassette'}
             </div>
@@ -99,6 +101,32 @@ export function CSSCassettePlayer({
               {cassette?.artist || 'Insert a cassette to begin'}
             </div>
           </div>
+          {cassette && (
+            <motion.button
+              onClick={onSaveToggle}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              className={`p-2 rounded-full transition-colors ${
+                isSaved ? 'text-red-500' : 'text-white/70'
+              } hover:bg-white/10`}
+              aria-label={isSaved ? 'Remove from saved' : 'Save track'}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                viewBox="0 0 24 24"
+                fill={isSaved ? 'currentColor' : 'none'}
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+            </motion.button>
+          )}
         </div>
         
         {/* Cassette Slot with animation */}

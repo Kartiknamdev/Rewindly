@@ -81,7 +81,7 @@ export function CassetteShelf({
 
           {/* Shelf with enhanced styling */}
           <motion.div 
-            className="fixed right-0 top-0 h-full w-full sm:w-[340px] bg-gray-900/70 backdrop-blur-md shadow-2xl z-40
+            className="fixed right-0 top-0 h-full w-full sm:w-[440px] bg-gray-900/70 backdrop-blur-md shadow-2xl z-40
                      flex flex-col border-l border-white/10"
             initial="hidden"
             animate="visible"

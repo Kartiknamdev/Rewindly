@@ -89,7 +89,7 @@ export const getTrendingTracks = async () => {
 
 export const searchTracks = async (query) => {
   try {
-    const response = await shazamApi.get('/search', {
+    const response = await shazamApi.get('/v2/search', {
       params: { 
         term: query,
         locale: 'en-US',
@@ -98,14 +98,14 @@ export const searchTracks = async (query) => {
       }
     });
 
-    if (response.data.tracks) {
-      return response.data.tracks.hits.map(hit => ({
-        id: hit.track.key,
-        title: hit.track.title,
-        artist: hit.track.subtitle,
-        albumArt: hit.track.images?.coverart,
-        preview: hit.track.hub?.actions?.[1]?.uri || hit.track.hub?.options?.[0]?.actions?.[1]?.uri,
-        artistId: hit.track.artists?.[0]?.adamid
+    if (response.data && response.data.results && response.data.results.songs) {
+      return response.data.results.songs.data.map(song => ({
+        id: song.id,
+        title: song.attributes.name,
+        artist: song.attributes.artistName,
+        albumArt: song.attributes.artwork.url.replace('{w}', '400').replace('{h}', '400'),
+        preview: song.attributes.previews[0]?.url,
+        artistId: null // Artist ID not available in this response apidojo changed their API :(
       }));
     }
     return [];

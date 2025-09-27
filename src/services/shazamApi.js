@@ -105,7 +105,7 @@ export const searchTracks = async (query) => {
         artist: song.attributes.artistName,
         albumArt: song.attributes.artwork.url.replace('{w}', '400').replace('{h}', '400'),
         preview: song.attributes.previews[0]?.url,
-        artistId: null // Artist ID not available in this response apidojo changed their API :(
+        artistId: null // Artist ID not available in this response apidojo changed their API :( sadly
       }));
     }
     return [];

@@ -168,7 +168,7 @@ export function SearchModal({ onClose, onTrackSelect, playerColor, accentColor }
                   </>
                 ) : query ? (
                   <div className="text-white/70 text-center py-8">
-                    No results found. Try a different search term.
+                    Almost there… good music takes a moment.
                   </div>
                 ) : (
                   <div className="text-white/70 text-center py-8">

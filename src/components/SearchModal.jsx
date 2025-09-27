@@ -168,11 +168,9 @@ export function SearchModal({ onClose, onTrackSelect, playerColor, accentColor }
                   </>
                 ) : query ? (
                   <div className="text-white/70 text-center py-8">
-<<<<<<< HEAD
-                    Almost there… good music takes a moment.
-=======
-                    Almost there… good music takes a moment...
->>>>>>> 6f63bc2d6f4002aca1f03412444a0ca8b39eefe0
+
+                    Almost there… good music takes a moment.❤️
+
                   </div>
                 ) : (
                   <div className="text-white/70 text-center py-8">

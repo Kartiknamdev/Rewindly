@@ -1,0 +1,34 @@
+Project Synopsis: Rewindly
+Date: July 4, 2025
+
+Overview:
+Rewindly is a modern web and mobile application designed to recreate the nostalgic experience of using cassette players and tapes. The platform allows users to play, manage, and customize music playlists with retro-inspired visuals and interactive cassette animations. Rewindly integrates with popular music services like Spotify and Shazam, providing seamless music search, playback, and personalized features.
+
+Key Features:
+- Cassette player and tape animations synchronized with music playback
+- Playlist creation, editing, and management
+- Theme customization with a color picker and multiple cassette styles
+- Integration with Spotify and Shazam APIs for music search and playback
+- Audio visualizer for real-time music visualization
+- Responsive design for both desktop and mobile devices
+
+Technology Stack:
+- Frontend: React, Vite, Tailwind CSS
+- Mobile: Capacitor (Android support)
+- APIs: Spotify, Shazam
+- State Management: React hooks, local storage
+
+Target Users:
+- Music enthusiasts seeking a unique, retro-themed listening experience
+- Users who enjoy customizing their music player interface
+- Individuals looking for seamless integration with modern music services
+
+Vision:
+Rewindly aims to blend the charm of vintage cassette players with the convenience of modern music streaming, offering users a fun, interactive, and highly customizable music experience.
+
+Future Plans:
+- User accounts and cloud-based playlist sync
+- Premium features and exclusive cassette themes
+- Support for additional music streaming services
+
+For more information, refer to the SRS document or project README.

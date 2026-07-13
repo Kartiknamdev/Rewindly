@@ -4,4 +4,7 @@
     <string name="title_activity_main">Rewindly</string>
     <string name="package_name">com.rewindly.app</string>
     <string name="custom_url_scheme">com.rewindly.app</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">This is an app widget description</string>
 </resources>

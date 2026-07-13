@@ -1,0 +1,108 @@
+Software Requirements Specification (SRS)
+Project: Rewindly
+Date: July 4, 2025
+
+1. Introduction
+----------------
+1.1 Purpose
+Rewindly is a web application that emulates the experience of using cassette players and tapes, allowing users to play, manage, and customize playlists with a retro aesthetic. The application integrates with music APIs (e.g., Spotify, Shazam) and provides a visually engaging, interactive interface.
+
+1.2 Scope
+Rewindly aims to provide users with a nostalgic music experience, featuring cassette player animations, playlist management, theme customization, and third-party music service integration. The application is built using React, Vite, and Capacitor for cross-platform compatibility.
+
+1.3 Definitions, Acronyms, and Abbreviations
+- SRS: Software Requirements Specification
+- UI: User Interface
+- API: Application Programming Interface
+- CSS: Cascading Style Sheets
+
+2. Overall Description
+----------------------
+2.1 Product Perspective
+Rewindly is a standalone web/mobile application. It leverages modern web technologies and integrates with external music APIs for enhanced functionality.
+
+2.2 Product Functions
+- Play and pause music tracks
+- Visualize audio with cassette animations
+- Manage playlists (create, edit, delete)
+- Search for tracks using integrated APIs
+- Customize cassette themes and UI appearance
+- Authenticate and connect with Spotify
+
+2.3 User Classes and Characteristics
+- General Users: Listen to music, manage playlists, customize themes
+- Premium Users: (Future) Access to advanced features
+
+2.4 Operating Environment
+- Web browsers (Chrome, Firefox, Edge, Safari)
+- Android devices (via Capacitor)
+
+2.5 Design and Implementation Constraints
+- Must use React and Vite
+- Integration with Spotify and Shazam APIs
+- Responsive design for desktop and mobile
+
+2.6 User Documentation
+- README.md for setup and usage
+- In-app tooltips and help modals
+
+3. Functional Requirements
+--------------------------
+3.1 Music Playback
+- The system shall allow users to play, pause, and skip tracks.
+- The system shall display cassette animations synchronized with playback.
+
+3.2 Playlist Management
+- The system shall allow users to create, edit, and delete playlists.
+- The system shall persist playlists using local storage or user accounts.
+
+3.3 Theme Customization
+- The system shall allow users to select and customize cassette themes.
+- The system shall provide a color picker and theme selector UI.
+
+3.4 Music Search and Integration
+- The system shall allow users to search for tracks using Spotify and Shazam APIs.
+- The system shall authenticate users with Spotify for personalized features.
+
+3.5 Audio Visualization
+- The system shall provide real-time audio visualizations during playback.
+
+4. Non-Functional Requirements
+------------------------------
+4.1 Performance
+- The application shall load within 3 seconds on modern devices.
+- Audio playback shall have less than 100ms latency.
+
+4.2 Security
+- User authentication tokens shall be securely stored.
+- API keys shall not be exposed in the client code.
+
+4.3 Usability
+- The UI shall be intuitive and visually appealing.
+- The application shall be accessible on both desktop and mobile devices.
+
+4.4 Reliability
+- The application shall handle API errors gracefully.
+- The application shall provide feedback for failed actions.
+
+5. System Features
+-------------------
+- Cassette player and tape animations
+- Playlist creation and management
+- Theme customization and color picker
+- Spotify and Shazam integration
+- Audio visualizer
+- Responsive and accessible UI
+
+6. Future Enhancements
+----------------------
+- User accounts and cloud playlist sync
+- Premium features (e.g., exclusive themes)
+- Additional music service integrations
+
+7. Appendices
+--------------
+- Project repository: [link to repo]
+- API documentation: [links to Spotify, Shazam APIs]
+
+End of SRS

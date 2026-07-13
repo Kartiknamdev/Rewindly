@@ -1,6 +1,9 @@
 apply plugin: 'com.android.application'
 
 android {
+    buildFeatures {
+        viewBinding true
+    }
     namespace "com.rewindly.app"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {

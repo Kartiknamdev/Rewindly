@@ -12,14 +12,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@capacitor/android": "^7.4.0",
+    "@capacitor/android": "^7.4.3",
     "@capacitor/cli": "^7.4.0",
     "@capacitor/core": "^7.4.0",
+    "capacitor-music-controls-plugin": "^6.1.0",
     "cors": "^2.8.5",
     "dotenv": "^17.0.0",
     "express": "^5.1.0",
     "express-session": "^1.18.1",
     "framer-motion": "^12.20.1",
+    "mediaplp": "file:mediaplp",
     "react": "^18.2.0",
     "react-colorful": "^5.6.1",
     "react-dom": "^18.2.0",

@@ -5,6 +5,7 @@ import { CSSCassettePlayer } from './components/CSSCassettePlayer';
 import { WalkmanPlayer } from './components/players/WalkmanPlayer';
 import { RadioPlayer } from './components/players/RadioPlayer';
 import { SpeakerPlayer } from './components/players/SpeakerPlayer';
+import { VinylPlayer } from './components/players/VinylPlayer';
 import { AudioPlayer } from './components/AudioPlayer';
 import { SearchModal } from './components/SearchModal';
 import { PlaylistManager } from './components/PlaylistManager';
@@ -247,6 +248,8 @@ function App() {
         return <RadioPlayer {...props} />;
       case 'speaker':
         return <SpeakerPlayer {...props} />;
+      case 'vinyl':
+        return <VinylPlayer {...props} />;
       default:
         // Cassette player theme
         return (
@@ -315,11 +318,20 @@ function App() {
       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
         <path d="M12 6v12m0-12c2 1 4 1 6 0m-6 12c2-1 4-1 6 0M6 6c2 1 4 1 6 0M6 18c2-1 4-1 6 0" strokeWidth="2"/>
       </svg>
+    ),
+    vinyl: (
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <circle cx="12" cy="12" r="9" strokeWidth="2" />
+        <circle cx="12" cy="12" r="3" strokeWidth="2" />
+        <path d="M17 12a5 5 0 00-5-5" strokeWidth="2" />
+        <path d="M12 18V9" strokeWidth="2" />
+        <path d="M12 9l3-2" strokeWidth="2" />
+      </svg>
     )
   };
 
   const handleThemeClick = () => {
-    const themes = ['cassette', 'walkman', 'radio', 'speaker'];
+    const themes = ['cassette', 'walkman', 'radio', 'speaker', 'vinyl'];
     const currentIndex = themes.indexOf(playerTheme);
     const nextIndex = (currentIndex + 1) % themes.length;
     handleThemeChange(themes[nextIndex]);
@@ -521,6 +533,7 @@ function App() {
               onSaveToggle={toggleSaveTrack}
               isOpen={isShelfOpen}
               onClose={() => setIsShelfOpen(false)}
+              playerTheme={playerTheme}
             />
 
             {/* Audio Player */}

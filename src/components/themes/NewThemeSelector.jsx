@@ -37,6 +37,17 @@ const themes = [
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0-11V3m0 0a3 3 0 100 6 3 3 0 000-6z" />
       </svg>
     )
+  },
+  {
+    id: 'vinyl',
+    name: 'Vinyl',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <circle cx="12" cy="12" r="9" strokeWidth={2} />
+        <circle cx="12" cy="12" r="3" strokeWidth={2} />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8a4 4 0 014 4" />
+      </svg>
+    )
   }
 ];
 
